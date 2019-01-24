@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -40,6 +42,7 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 public class PushPlugin extends CordovaPlugin implements PushConstants {
 
   public static final String LOG_TAG = "Push_Plugin";
+  public static boolean broughtToFront;
 
   private static CallbackContext pushContext;
   private static CordovaWebView gWebView;
@@ -431,6 +434,39 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
           }
         }
       });
+    } else if (CANCEL_AT_FRONT.equals(action)) {
+      if (broughtToFront) {
+        broughtToFront = false;
+        cordova.getActivity().runOnUiThread(() -> {
+
+          if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+            Window window = cordova.getActivity().getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+            callbackContext.success();
+            return;
+          }
+
+          Window window = cordova.getActivity().getWindow();
+          window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+          try {
+            cordova.getActivity().setShowWhenLocked(false);
+          } catch (NoSuchMethodError e) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+          }
+          window.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+          try {
+            cordova.getActivity().setTurnScreenOn(false);
+          } catch (NoSuchMethodError e) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+          }
+          cordova.getActivity().moveTaskToBack(true);
+
+          callbackContext.success();
+        });
+      }
     } else {
       Log.e(LOG_TAG, "Invalid action : " + action);
       callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
@@ -518,6 +554,23 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
   public void onResume(boolean multitasking) {
     super.onResume(multitasking);
     gForeground = true;
+
+    Window window = cordova.getActivity().getWindow();
+    try {
+      cordova.getActivity().setShowWhenLocked(true);
+      window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+    } catch (NoSuchMethodError e) {
+      window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+    }
+    try {
+      cordova.getActivity().setTurnScreenOn(true);
+      window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    } catch (NoSuchMethodError e) {
+      window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    }
+
+    window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
   }
 
   @Override

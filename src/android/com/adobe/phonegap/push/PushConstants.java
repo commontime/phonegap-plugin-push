@@ -44,6 +44,7 @@ public interface PushConstants {
   public static final String SUBSCRIBE = "subscribe";
   public static final String UNSUBSCRIBE = "unsubscribe";
   public static final String UNREGISTER = "unregister";
+  public static final String CANCEL_AT_FRONT = "cancelAtFront";
   public static final String EXIT = "exit";
   public static final String FINISH = "finish";
   public static final String HAS_PERMISSION = "hasPermission";
@@ -102,4 +103,7 @@ public interface PushConstants {
   public static final String ONGOING = "ongoing";
   public static final String LIST_CHANNELS = "listChannels";
   public static final String CLEAR_NOTIFICATION = "clearNotification";
+
+  public static final String BRING_TO_FRONT = "bringToFront";
+  public static final String PUSH_START = "pushStart";
 }
