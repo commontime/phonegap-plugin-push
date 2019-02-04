@@ -386,6 +386,14 @@ module.exports = {
     exec(successCallback, errorCallback, 'PushNotification', 'cancelAtFront', []);
   },
 
+  addToIgnoreList: function addToIgnoreList(successCallback, errorCallback, messageId) {
+    exec(successCallback, errorCallback, 'PushNotification', 'addToIgnoreList', [messageId]);
+  },
+
+  removeFromIgnoreList: function removeFromIgnoreList(successCallback, errorCallback, messageId) {
+    exec(successCallback, errorCallback, 'PushNotification', 'removeFromIgnoreList', [messageId]);
+  },
+
   /**
    * PushNotification Object.
    *
