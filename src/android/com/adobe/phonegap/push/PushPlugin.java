@@ -469,10 +469,43 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
       }
     } else if (ADD_TO_IGNORE.equals(action)) {
       cordova.getThreadPool().execute(new Runnable() {
-        final String messageId = data.getString(0);
-        new IgnoreMessageStore().addMessage(messageId);
-        callbackContext.success();
+        @Override
+        public void run() {
+          try {
+            final String messageId = data.getString(0);
+            new IgnoreMessageStore(cordova.getActivity()).addMessage(messageId);
+            callbackContext.success();
+          } catch(JSONException e) {
+            callbackContext.error("Invalid messageId: " + e.getMessage());
+          }
+        }
       });
+    } else if (REMOVE_FROM_IGNORE.equals(action)) {
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final String messageId = data.getString(0);
+                    new IgnoreMessageStore(cordova.getActivity()).deleteMessage(messageId);
+                    callbackContext.success();
+                } catch(JSONException e) {
+                    callbackContext.error("Invalid messageId: " + e.getMessage());
+                }
+            }
+        });
+    } else if (CHECK_IGNORE.equals(action)) {
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final String messageId = data.getString(0);
+                    new IgnoreMessageStore(cordova.getActivity()).exists(messageId);
+                    callbackContext.success();
+                } catch(JSONException e) {
+                    callbackContext.error("Invalid messageId: " + e.getMessage());
+                }
+            }
+        });
     } else {
       Log.e(LOG_TAG, "Invalid action : " + action);
       callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));

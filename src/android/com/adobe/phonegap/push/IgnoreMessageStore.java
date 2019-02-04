@@ -78,7 +78,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
         Log.d("deleteMessage", messageId);
     }
 
-    public boolean exists(int id) {
+    public boolean exists(String messageId) {
 
         final String[] COLUMNS = {KEY_ID};
 
@@ -87,8 +87,8 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
         Cursor cursor =
                 db.query(TABLE_IGNORE, // a. table
                         COLUMNS, // b. column names
-                        " id = ?", // c. selections
-                        new String[]{String.valueOf(id)}, // d. selections args
+                        MESSAGE_ID + " = ?", // c. selections
+                        new String[]{String.valueOf(messageId)}, // d. selections args
                         null, // e. group by
                         null, // f. having
                         null, // g. order by
