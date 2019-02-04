@@ -103,7 +103,13 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
       if (clearBadge) {
         PushPlugin.setApplicationIconBadgeNumber(getApplicationContext(), 0);
       }
-
+      
+      String messageId = message.getData().getOrDefault(MESSAGE_ID, null);
+      if( messageId != null ) {
+        if( new IgnoreMessageStore(cordova.getActivity().exists(messageId))) {
+          return;
+        }
+      }
 
       if (message.getData().getOrDefault(BRING_TO_FRONT, "").equalsIgnoreCase("true")) {
         if (!PushPlugin.isInForeground() || !isScreenOn()) {

@@ -16,6 +16,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
     private static final String MESSAGE_ID = "messageid";
     private static final String TABLE_IGNORE = "messageid";
     private static final String KEY_ID = "id";
+    private static final String DATE = "date";
 
     public IgnoreMessageStore(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);  
@@ -26,7 +27,8 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
         // SQL statement to create book table
         String CREATE_ID_TABLE = "CREATE TABLE "+TABLE_IGNORE+" ( " +
                 KEY_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-                MESSAGE_ID + " TEXT )";
+                MESSAGE_ID + " TEXT, " +
+                DATE + " INTEGER )";
  
         // create books table
         db.execSQL(CREATE_ID_TABLE);
@@ -51,6 +53,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
         // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
         values.put(MESSAGE_ID, messageId); // get title 
+        values.put(DATE, new Date().getTime());
  
         // 3. insert
         db.insert(TABLE_IGNORE, // table
