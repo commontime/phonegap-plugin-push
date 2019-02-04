@@ -65,11 +65,28 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
  
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
- 
-        // 2. delete
-        db.delete(TABLE_IGNORE  , //table name
-                KEY_ID+" = ?",  // selections
-                new String[] { messageId }); //selections args
+
+        final String[] COLUMNS = {KEY_ID};
+
+        Cursor cursor =
+                db.query(TABLE_IGNORE, // a. table
+                        COLUMNS, // b. column names
+                        MESSAGE_ID + " = ?", // c. selections
+                        new String[]{String.valueOf(messageId)}, // d. selections args
+                        null, // e. group by
+                        null, // f. having
+                        null, // g. order by
+                        null); // h. limit
+
+        if( cursor != null ) {
+            cursor.moveToFirst();
+            int keyId = cursor.getInt(0);
+
+            // 2. delete
+            db.delete(TABLE_IGNORE, //table name
+                    KEY_ID + " = ?",  // selections
+                    new String[]{""+keyId}); //selections args
+        }
  
         // 3. close
         db.close();
@@ -94,6 +111,10 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
                         null, // g. order by
                         null); // h. limit
 
-        return cursor != null;
+        if( cursor != null ) {
+            return cursor.getCount() > 0;
+        }
+
+        return false;
     }
 }

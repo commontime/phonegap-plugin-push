@@ -498,9 +498,11 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
             @Override
             public void run() {
                 try {
-                    final String messageId = data.getString(0);
-                    new IgnoreMessageStore(cordova.getActivity()).exists(messageId);
-                    callbackContext.success();
+                  final String messageId = data.getString(0);
+                  boolean exists = new IgnoreMessageStore(cordova.getActivity()).exists(messageId);
+                  JSONObject result = new JSONObject();
+                  result.put("exists", exists);
+                  callbackContext.success(result);
                 } catch(JSONException e) {
                     callbackContext.error("Invalid messageId: " + e.getMessage());
                 }
