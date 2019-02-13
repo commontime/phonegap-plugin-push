@@ -108,7 +108,8 @@ public interface PushConstants {
   public static final String BRING_TO_FRONT = "bringToFront";
   public static final String PUSH_START = "pushStart";
   public static final String CANCEL_AT_FRONT = "cancelAtFront";
-  
+
+  public static final String TIMESTAMP = "timestamp";
   public static final String ADD_TO_IGNORE = "addToIgnoreList";
   public static final String REMOVE_FROM_IGNORE = "removeFromIgnoreList";
   public static final String CHECK_IGNORE = "checkIgnoreList";
