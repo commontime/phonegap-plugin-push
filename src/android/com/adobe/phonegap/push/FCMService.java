@@ -990,6 +990,7 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
     if (!(screenOn && PushPlugin.isInForeground())) {
       PushPlugin.broughtToFront = true;
       Intent i2 = new Intent("com.adobe.phonegap.push.BlankActivity");
+      i2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       i2.putExtra("turnScreenOn", true);
       i2.setPackage(getPackageName());
       startActivity(i2);
