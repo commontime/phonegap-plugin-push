@@ -114,8 +114,8 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
 
       String bringToFront = message.getData().get(BRING_TO_FRONT);
       if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
-        if (!PushPlugin.isInForeground() || !Utils.isScreenOn(this)) {
-          Utils.switchOnScreenAndForeground(this);
+        if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
+          android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
           // Stash this push until resumed?
           PushPlugin.sendExtras(extras);
           return;
