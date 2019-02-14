@@ -382,6 +382,10 @@ module.exports = {
     exec(successCallback, errorCallback, 'PushNotification', 'listChannels', []);
   },
 
+  bringToFront: function bringToFront(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, 'PushNotification', 'bringToFront', []);
+  },
+
   cancelAtFront: function cancelAtFront(successCallback, errorCallback) {
     exec(successCallback, errorCallback, 'PushNotification', 'cancelAtFront', []);
   },

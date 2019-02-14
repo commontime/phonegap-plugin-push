@@ -114,8 +114,8 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
 
       String bringToFront = message.getData().get(BRING_TO_FRONT);
       if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
-        if (!PushPlugin.isInForeground() || !isScreenOn()) {
-          switchOnScreenAndForeground();
+        if (!PushPlugin.isInForeground() || !Utils.isScreenOn(this)) {
+          Utils.switchOnScreenAndForeground(this);
           // Stash this push until resumed?
           PushPlugin.sendExtras(extras);
           return;
@@ -965,35 +965,5 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
     Log.d(LOG_TAG, "sender id = " + savedSenderID);
 
     return from.equals(savedSenderID) || from.startsWith("/topics/");
-  }
-
-  private boolean isScreenOn() {
-    boolean screenOn = false;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-      PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-      if (powerManager.isInteractive()) {
-        screenOn = true;
-      }
-    } else {
-      PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-      if (powerManager.isScreenOn()) {
-        screenOn = true;
-      }
-    }
-    return screenOn;
-  }
-
-  private void switchOnScreenAndForeground() {
-
-    boolean screenOn = isScreenOn();
-
-    if (!(screenOn && PushPlugin.isInForeground())) {
-      PushPlugin.broughtToFront = true;
-      Intent i2 = new Intent("com.adobe.phonegap.push.BlankActivity");
-      i2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      i2.putExtra("turnScreenOn", true);
-      i2.setPackage(getPackageName());
-      startActivity(i2);
-    }
   }
 }

@@ -342,6 +342,10 @@ module.exports = {
     exec(successCallback, errorCallback, 'PushNotification', 'cancelAtFront', []);
   },
 
+  bringToFront: (successCallback, errorCallback) => {
+    exec(successCallback, errorCallback, 'PushNotification', 'bringToFront', []);
+  },
+
   addToIgnoreList: (successCallback, errorCallback, messageId) => {
     exec(successCallback, errorCallback, 'PushNotification', 'addToIgnoreList', [messageId]);
   },

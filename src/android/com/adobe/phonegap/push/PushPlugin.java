@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.com.adobe.phonegap.push.Utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -434,6 +435,10 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
           }
         }
       });
+    } else if (BRING_TO_FRONT.equals(action)) {
+      broughtToFront = true;
+      Utils.switchOnScreenAndForeground(cordova.getActivity());
+      callbackContext.success();
     } else if (CANCEL_AT_FRONT.equals(action)) {
       if (broughtToFront) {
         broughtToFront = false;
