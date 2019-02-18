@@ -436,7 +436,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
         }
       });
     } else if (BRING_TO_FRONT.equals(action)) {
-      if(!Utils.isScreenOn()) {
+      if(!Utils.isScreenOn(cordova.getActivity())) {
         broughtToFront = true;
       }
       Utils.switchOnScreenAndForeground(cordova.getActivity());
