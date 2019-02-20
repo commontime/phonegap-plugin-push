@@ -10,7 +10,9 @@ import android.util.Log;
 import java.util.Date;
 
 public class IgnoreMessageStore extends SQLiteOpenHelper {
- 
+
+    static final String TAG = "IgnoreMessageStore";
+
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
@@ -47,7 +49,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
 
     public void addMessage(String messageId){
                 //for logging
-        Log.d("addMessage", messageId);
+        Log.d(TAG, "Add message: " + messageId);
  
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -67,37 +69,43 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
     }
 
     public void deleteMessage(String messageId) {
- 
-        // 1. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
 
-        final String[] COLUMNS = {KEY_ID};
+        if(exists(messageId)) {
 
-        Cursor cursor =
-                db.query(TABLE_IGNORE, // a. table
-                        COLUMNS, // b. column names
-                        MESSAGE_ID + " = ?", // c. selections
-                        new String[]{String.valueOf(messageId)}, // d. selections args
-                        null, // e. group by
-                        null, // f. having
-                        null, // g. order by
-                        null); // h. limit
+            // 1. get reference to writable DB
+            SQLiteDatabase db = this.getWritableDatabase();
 
-        if( cursor != null ) {
-            cursor.moveToFirst();
-            int keyId = cursor.getInt(0);
+            final String[] COLUMNS = {KEY_ID};
 
-            // 2. delete
-            db.delete(TABLE_IGNORE, //table name
-                    KEY_ID + " = ?",  // selections
-                    new String[]{""+keyId}); //selections args
+            Cursor cursor =
+                    db.query(TABLE_IGNORE, // a. table
+                            COLUMNS, // b. column names
+                            MESSAGE_ID + " = ?", // c. selections
+                            new String[]{String.valueOf(messageId)}, // d. selections args
+                            null, // e. group by
+                            null, // f. having
+                            null, // g. order by
+                            null); // h. limit
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+                Log.i(TAG, "Removing row: " + messageId);
+                int keyId = cursor.getInt(0);
+
+                // 2. delete
+                db.delete(TABLE_IGNORE, //table name
+                        KEY_ID + " = ?",  // selections
+                        new String[]{"" + keyId}); //selections args
+            }
+
+            // 3. close
+            db.close();
+
+            //log
+            Log.d("deleted Message: ", messageId);
+        } else {
+            Log.d("Message ID not found: ", messageId);
         }
- 
-        // 3. close
-        db.close();
- 
-        //log
-        Log.d("deleteMessage", messageId);
     }
 
     public boolean exists(String messageId) {
