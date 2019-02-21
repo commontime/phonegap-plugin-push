@@ -70,7 +70,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
 
         db = this.getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_IGNORE);
-        Log.d(TAG, "Ignore Table Size: ", count);
+        Log.d(TAG, "Ignore Table Size: " + count);
         db.close();
     }
 
@@ -115,7 +115,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_IGNORE);
-        Log.d(TAG, "Ignore Table Size: ", count);
+        Log.d(TAG, "Ignore Table Size: " + count);
         db.close();
     }
 
