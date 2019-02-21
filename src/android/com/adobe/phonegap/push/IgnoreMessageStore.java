@@ -64,9 +64,14 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
         db.insert(TABLE_IGNORE, // table
                 null, //nullColumnHack
                 values); // key/value -> keys = column names/ values = column values
- 
+                        
         // 4. close
         db.close(); 
+
+        db = this.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_IGNORE);
+        Log.d(TAG, "Ignore Table Size: ", count);
+        db.close();
     }
 
     public void deleteMessage(String messageId) {
@@ -111,6 +116,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_IGNORE);
         Log.d(TAG, "Ignore Table Size: ", count);
+        db.close();
     }
 
     public boolean exists(String messageId) {
