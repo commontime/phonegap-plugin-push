@@ -108,9 +108,9 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
             db.close();
 
             //log
-            Log.i(TAG, "Deleted from Ignore List: ", messageId);
+            Log.i(TAG, "Deleted from Ignore List: " + messageId);
         } else {
-            Log.i(TAG, "Message ID not found: ", messageId);
+            Log.i(TAG, "Message ID not found: " + messageId);
         }
 
         SQLiteDatabase db = this.getReadableDatabase();
