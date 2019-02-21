@@ -3,6 +3,7 @@ package com.adobe.phonegap.push;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -49,7 +50,7 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
 
     public void addMessage(String messageId){
                 //for logging
-        Log.d(TAG, "Add message: " + messageId);
+        Log.d(TAG, "Add to Ignore List: " + messageId);
  
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -102,10 +103,14 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
             db.close();
 
             //log
-            Log.d("deleted Message: ", messageId);
+            Log.i(TAG, "Deleted from Ignore List: ", messageId);
         } else {
-            Log.d("Message ID not found: ", messageId);
+            Log.i(TAG, "Message ID not found: ", messageId);
         }
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_IGNORE);
+        Log.d(TAG, "Ignore Table Size: ", count);
     }
 
     public boolean exists(String messageId) {
