@@ -18,7 +18,7 @@ public class Utils {
         if (!(screenOn && PushPlugin.isInForeground())) {
             PushPlugin.broughtToFront = true;
             Intent i2 = new Intent("com.adobe.phonegap.push.BlankActivity");
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
               i2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
             i2.putExtra("turnScreenOn", true);
