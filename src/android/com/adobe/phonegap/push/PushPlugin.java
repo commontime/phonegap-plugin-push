@@ -624,6 +624,23 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
 
       window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
       window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    } else {
+      Window window = cordova.getActivity().getWindow();
+      try {
+        cordova.getActivity().setShowWhenLocked(false);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+      } catch (NoSuchMethodError e) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+      }
+      try {
+        cordova.getActivity().setTurnScreenOn(false);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+      } catch (NoSuchMethodError e) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+      }
+
+      window.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+      window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
   }
 
