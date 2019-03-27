@@ -437,11 +437,13 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
       });
     } else if (BRING_TO_FRONT.equals(action)) {
       if(!Utils.isScreenOn(cordova.getActivity())) {
+        System.out.println("GJM BRING_TO_FRONT: " + broughtToFront);
         broughtToFront = true;
       }
       Utils.switchOnScreenAndForeground(cordova.getActivity());
       callbackContext.success();
     } else if (CANCEL_AT_FRONT.equals(action)) {
+      System.out.println("GJM CANCEL_AT_FRONT: " + broughtToFront);
       if (broughtToFront) {
         broughtToFront = false;
         cordova.getActivity().runOnUiThread(() -> {
@@ -602,6 +604,8 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
   public void onResume(boolean multitasking) {
     super.onResume(multitasking);
     gForeground = true;
+
+    System.out.println("GJM Resuming: " + broughtToFront);
 
     if(broughtToFront) {
       Window window = cordova.getActivity().getWindow();
