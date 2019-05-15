@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.R;
 
 public class ForegroundStarterService extends Service {
     
@@ -40,7 +41,7 @@ public class ForegroundStarterService extends Service {
                     .setContentTitle("Truiton Music Player")
                     .setTicker("Truiton Music Player")
                     .setContentText("My Music")
-                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_light)
+                    .setSmallIcon(R.drawable.sym_def_app_icon)
                     .setOngoing(true).build();
 
             startForeground(0, notification);
