@@ -24,6 +24,12 @@ public class ForegroundStarterService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+      System.out.println("ForegroundStarterService:onDestroy");
+      super.onDestroy();
+    }
+  
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println("ForegroundStarterService:onStartCommand");
         super.onStartCommand(intent, flags, startId);
