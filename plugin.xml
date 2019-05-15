@@ -51,7 +51,7 @@
             <category android:name="android.intent.category.DEFAULT"></category>
         </intent-filter>
       </activity>
-      <service android:name="com.adobe.phonegap.push.StarterForegroundService">
+      <service android:name="com.adobe.phonegap.push.ForegroundStarterService">
       </service>
     </config-file>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
