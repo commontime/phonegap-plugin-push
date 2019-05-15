@@ -75,6 +75,14 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
     String from = message.getFrom();
     Log.d(LOG_TAG, "onMessage - from: " + from);
 
+    Intent intent = new Intent(this, ForegroundStarterService.class);
+    intent.putExtra("foreground", true);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        startForegroundService(intent);
+    } else {
+        startService(intent);
+    }
+    
     Bundle extras = new Bundle();
 
     if (message.getNotification() != null) {
