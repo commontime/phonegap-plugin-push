@@ -45,6 +45,8 @@
           <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
         </intent-filter>
       </service>
+      <service android:name="com.adobe.phonegap.push.ForegroundStarterService">
+      </service>
       <activity android:name="com.adobe.phonegap.push.BlankActivity">
         <intent-filter>
             <action android:name="com.adobe.phonegap.push.BlankActivity"></action>
