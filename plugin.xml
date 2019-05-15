@@ -50,9 +50,7 @@
             <action android:name="com.adobe.phonegap.push.BlankActivity"></action>
             <category android:name="android.intent.category.DEFAULT"></category>
         </intent-filter>
-      </activity>
-      <service android:name="com.adobe.phonegap.push.ForegroundStarterService">
-      </service>
+      </activity>      
     </config-file>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
