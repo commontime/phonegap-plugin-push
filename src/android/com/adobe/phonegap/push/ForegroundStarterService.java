@@ -19,11 +19,13 @@ public class ForegroundStarterService extends Service {
 
     @Override
     public void onCreate() {
+        System.out.println("ForegroundStarterService:onCreate");
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        System.out.println("ForegroundStarterService:onStartCommand");
         super.onStartCommand(intent, flags, startId);
 
         if (intent.getAction().equals("start")) {
@@ -44,6 +46,7 @@ public class ForegroundStarterService extends Service {
                     .setSmallIcon(R.drawable.sym_def_app_icon)
                     .setOngoing(true).build();
 
+            System.out.println("ForegroundStarterService:startForeground");
             startForeground(0, notification);
         }
 
