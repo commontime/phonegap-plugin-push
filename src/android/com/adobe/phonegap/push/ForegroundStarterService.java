@@ -53,7 +53,7 @@ public class ForegroundStarterService extends Service {
                     .setOngoing(true).build();
 
             System.out.println("ForegroundStarterService:startForeground");
-            startForeground(0, notification);
+            startForeground(123467, notification);
         }
 
         if (intent.getAction().equals("stop")) {
