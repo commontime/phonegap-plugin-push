@@ -519,7 +519,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
             }
         });
     } else if ("1234".equals(action)) {
-      Intent intent = new Intent(this, ForegroundStarterService.class);
+      Intent intent = new Intent(cordova.getActivity(), ForegroundStarterService.class);
       intent.setAction("start");
       intent.putExtra("foreground", true);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
