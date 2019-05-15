@@ -1,4 +1,4 @@
-package com.commontime.cmpush;
+package com.adobe.phonegap.push;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
