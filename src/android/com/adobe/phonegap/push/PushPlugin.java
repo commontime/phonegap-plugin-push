@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
@@ -483,6 +484,11 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
           try {
             final String messageId = data.getString(0);
             new IgnoreMessageStore(cordova.getActivity()).addMessage(messageId);
+            
+            Intent intent = new Intent(cordova.getActivity(), ForegroundStarterService.class);
+            intent.setAction("stop");
+            cordova.getActivity().startService(intent);         
+            
             callbackContext.success();
           } catch(JSONException e) {
             callbackContext.error("Invalid messageId: " + e.getMessage());

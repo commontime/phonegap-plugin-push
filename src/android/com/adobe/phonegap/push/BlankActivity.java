@@ -23,6 +23,8 @@ public class BlankActivity extends Activity {
     public void onResume() {
         super.onResume();
 
+        System.out.println("GJM BLANK ACTIVITY onResume");
+      
         new Thread(() -> {
             SystemClock.sleep(100);
             BlankActivity.this.runOnUiThread(() -> {
@@ -33,6 +35,8 @@ public class BlankActivity extends Activity {
                     intent.putExtra(PushConstants.PUSH_START, true);
                     intent.setPackage(getPackageName());
                     startActivity(intent);
+                  
+                    System.out.println("GJM BLANK ACTIVITY startActivity");
                 }
 
                 finish();
