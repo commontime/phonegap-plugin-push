@@ -37,7 +37,7 @@ public class ForegroundStarterService extends Service {
         if (intent.getAction().equals("start")) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel("1", "1", NotificationManager.IMPORTANCE_HIGH);
+                NotificationChannel channel = new NotificationChannel("alerts", "alerts", NotificationManager.IMPORTANCE_HIGH);
                 channel.setDescription("Channel 1");
                 // Register the channel with the system; you can't change the importance
                 // or other notification behaviors after this
@@ -45,10 +45,10 @@ public class ForegroundStarterService extends Service {
                 notificationManager.createNotificationChannel(channel);
             }
 
-            Notification notification = new NotificationCompat.Builder(this, "1")
-                    .setContentTitle("Truiton Music Player")
-                    .setTicker("Truiton Music Player")
-                    .setContentText("My Music")
+            Notification notification = new NotificationCompat.Builder(this, "alerts")
+                    .setContentTitle("Clinical Messaging")
+                    .setTicker("Clinical Messaging")
+                    .setContentText("An alert is pending")
                     .setSmallIcon(R.drawable.sym_def_app_icon)
                     .setOngoing(true).build();
 
