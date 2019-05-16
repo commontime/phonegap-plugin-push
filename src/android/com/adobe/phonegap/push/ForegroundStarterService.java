@@ -48,8 +48,8 @@ public class ForegroundStarterService extends Service {
             Notification notification = new NotificationCompat.Builder(this, "alerts")
                     .setContentTitle("Clinical Messaging")
                     .setTicker("Clinical Messaging")
-                    .setContentText("An alert is pending")
-                    .setSmallIcon(R.drawable.sym_def_app_icon)
+                    .setContentText("Receiving Messages")
+                    .setSmallIcon(R.drawable.sym_action_email)
                     .setOngoing(true).build();
 
             System.out.println("ForegroundStarterService:startForeground");
