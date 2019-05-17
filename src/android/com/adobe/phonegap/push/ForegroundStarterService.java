@@ -58,9 +58,8 @@ public class ForegroundStarterService extends Service {
 
         if (intent.getAction().equals("stop")) {
             stopSelf(startId);
-            return START_NOT_STICKY;
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 }
