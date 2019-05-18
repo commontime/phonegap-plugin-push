@@ -12,14 +12,14 @@
     <engine name="cordova-ios" version=">=4.5.0"/>
   </engines>
   <platform name="android">
-<!--     <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
+    <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
       <intent-filter>
 		    <action android:name="android.intent.action.VIEW" />
 		    <category android:name="android.intent.category.DEFAULT" />
 		    <data android:scheme="pushboot"/>
 	    </intent-filter>
-    </config-file> -->
-<!--     <edit-config file="res/xml/config.xml" target="/*" mode="merge">
+    </config-file>
+    <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushNotification">
         <param name="android-package" value="com.adobe.phonegap.push.PushPlugin"/>
         <param name="onload" value="true" />
@@ -28,8 +28,8 @@
         <param name="android-package" value="com.commontime.plugin.FileOpener"/>
         <param name="onload" value="true" />
       </feature>
-    </edit-config> -->
-    <config-file target="AndroidManifest.xml" path="/manifest">
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-permission android:name="android.permission.INTERNET"/>
       <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
       <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -37,7 +37,7 @@
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     </config-file>
     <preference name="REQUIREDVERSION" default="1.0.0" />
-    <config-file target="AndroidManifest.xml" path="/manifest/application">
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
         <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
       </provider>
