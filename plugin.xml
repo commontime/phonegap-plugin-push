@@ -39,7 +39,7 @@
     <preference name="REQUIREDVERSION" default="1.0.0" />
     <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
       <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
-              <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
+        <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
       </provider>
       <activity android:name="com.adobe.phonegap.push.PushHandlerActivity" android:exported="true" android:permission="${applicationId}.permission.PushHandlerActivity"/>
       <receiver android:name="com.adobe.phonegap.push.BackgroundActionButtonHandler"/>
@@ -63,10 +63,9 @@
         </intent-filter>
       </activity>
       <activity android:resizeableActivity="false"/>
-      <application android:allowBackup="false"/>
-      <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize">
-    	</activity>
-      <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION" />
+<!--       <application android:allowBackup="false"/> -->
+      <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize"></activity>
+      <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/>
     </edit-config>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
