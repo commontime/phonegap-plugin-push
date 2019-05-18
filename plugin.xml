@@ -38,9 +38,9 @@
     </config-file>
     <preference name="REQUIREDVERSION" default="1.0.0" />
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-<!--       <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
+      <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
         <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
-      </provider> -->
+      </provider>
       <activity android:name="com.adobe.phonegap.push.PushHandlerActivity" android:exported="true" android:permission="${applicationId}.permission.PushHandlerActivity"/>
       <receiver android:name="com.adobe.phonegap.push.BackgroundActionButtonHandler"/>
       <receiver android:name="com.adobe.phonegap.push.PushDismissedHandler"/>
@@ -61,10 +61,10 @@
             <category android:name="android.intent.category.DEFAULT"></category>
         </intent-filter>
       </activity>
-<!--       <activity android:resizeableActivity="false"/> -->
-<!--       <application android:allowBackup="false"/> -->
-<!--       <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize"></activity> -->
-<!--       <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/> -->
+      <activity android:resizeableActivity="false"/>
+      <application android:allowBackup="false"/>
+      <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize"></activity>
+      <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/>
     </config-file>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
