@@ -37,10 +37,10 @@
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     </config-file>
     <preference name="REQUIREDVERSION" default="1.0.0" />
-<!--     <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
-      <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
+    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
+<!--       <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
         <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
-      </provider>
+      </provider> -->
       <activity android:name="com.adobe.phonegap.push.PushHandlerActivity" android:exported="true" android:permission="${applicationId}.permission.PushHandlerActivity"/>
       <receiver android:name="com.adobe.phonegap.push.BackgroundActionButtonHandler"/>
       <receiver android:name="com.adobe.phonegap.push.PushDismissedHandler"/>
@@ -54,19 +54,18 @@
           <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
         </intent-filter>
       </service>
-      <service android:name="com.adobe.phonegap.push.ForegroundStarterService">
-      </service>
-      <activity android:name="com.adobe.phonegap.push.BlankActivity">
+<!--       <service android:name="com.adobe.phonegap.push.ForegroundStarterService"></service> -->
+<!--       <activity android:name="com.adobe.phonegap.push.BlankActivity">
         <intent-filter>
             <action android:name="com.adobe.phonegap.push.BlankActivity"></action>
             <category android:name="android.intent.category.DEFAULT"></category>
         </intent-filter>
-      </activity>
-      <activity android:resizeableActivity="false"/>
+      </activity> -->
+<!--       <activity android:resizeableActivity="false"/>
       <application android:allowBackup="false"/>
       <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize"></activity>
-      <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/>
-    </edit-config> -->
+      <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/> -->
+    </edit-config>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
     <framework src="com.android.support:support-v13:$ANDROID_SUPPORT_V13_VERSION"/>
