@@ -29,13 +29,13 @@
         <param name="onload" value="true" />
       </feature>
     </config-file>
-<!--     <config-file target="AndroidManifest.xml" parent="/manifest">
+    <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-permission android:name="android.permission.INTERNET"/>
       <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
       <uses-permission android:name="android.permission.WAKE_LOCK"/>
       <uses-permission android:name="android.permission.VIBRATE"/>
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    </config-file> -->
+    </config-file>
     <preference name="REQUIREDVERSION" default="1.0.0" />
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
@@ -69,11 +69,6 @@
     </edit-config>
     <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest">
       <application android:allowBackup="false"/>
-      <uses-permission android:name="android.permission.INTERNET"/>
-      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-      <uses-permission android:name="android.permission.WAKE_LOCK"/>
-      <uses-permission android:name="android.permission.VIBRATE"/>
-      <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     </edit-config>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
