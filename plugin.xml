@@ -35,6 +35,7 @@
       <uses-permission android:name="android.permission.WAKE_LOCK"/>
       <uses-permission android:name="android.permission.VIBRATE"/>
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     </config-file>
     <preference name="REQUIREDVERSION" default="1.0.0" />
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
