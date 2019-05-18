@@ -64,12 +64,12 @@
       <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize"></activity>
       <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/>
     </config-file>
-    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name=".MainActivity" android:resizeableActivity="false"/>
-    </edit-config>
-    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest">
+    </config-file>
+    <config-file file="AndroidManifest.xml" parent="/manifest">
       <application android:allowBackup="false"/>
-    </edit-config>
+    </config-file>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
     <framework src="com.android.support:support-v13:$ANDROID_SUPPORT_V13_VERSION"/>
