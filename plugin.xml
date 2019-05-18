@@ -60,13 +60,15 @@
             <action android:name="com.adobe.phonegap.push.BlankActivity"></action>
             <category android:name="android.intent.category.DEFAULT"></category>
         </intent-filter>
-      </activity>
-      <application android:allowBackup="false"/>
+      </activity>      
       <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize"></activity>
       <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/>
     </config-file>
     <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
       <activity android:name=".MainActivity" android:resizeableActivity="false"/>
+    </edit-config>
+    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest">
+      <application android:allowBackup="false"/>
     </edit-config>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
