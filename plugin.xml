@@ -67,7 +67,7 @@
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name=".MainActivity" android:resizeableActivity="false"/>
     </config-file>
-    <config-file file="AndroidManifest.xml" parent="/manifest">
+    <config-file target="AndroidManifest.xml" parent="/manifest">
       <application android:allowBackup="false"/>
     </config-file>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
