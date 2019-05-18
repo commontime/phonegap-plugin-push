@@ -12,13 +12,13 @@
     <engine name="cordova-ios" version=">=4.5.0"/>
   </engines>
   <platform name="android">
-    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application/activity">
+    <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
       <intent-filter>
 		    <action android:name="android.intent.action.VIEW" />
 		    <category android:name="android.intent.category.DEFAULT" />
 		    <data android:scheme="pushboot"/>
 	    </intent-filter>
-    </edit-config>
+    </config-file>
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushNotification">
         <param name="android-package" value="com.adobe.phonegap.push.PushPlugin"/>
