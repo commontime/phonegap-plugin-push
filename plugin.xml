@@ -38,7 +38,7 @@
       <uses-permission android:name="android.permission.VIBRATE"/>
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     </config-file>
-    <edit-config file="AndroidManifest.xml" mode="merge" target="application">
+    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
           <provider
               android:name="android.support.v4.content.FileProvider"
               android:authorities="${applicationId}.provider"
