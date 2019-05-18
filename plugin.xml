@@ -64,7 +64,7 @@
       </activity>      
       <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="" android:launchMode="singleTop" android:name="com.commontime.plugin.WebViewCheckerEnableUpdateActivity" android:windowSoftInputMode="adjustResize"></activity>
       <meta-data android:name="requiredVersion" android:value="$REQUIREDVERSION"/>
-    </config-file>
+    </edit-config>
     <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
       <activity android:name=".MainActivity" android:resizeableActivity="false"/>
     </edit-config>
