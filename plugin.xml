@@ -32,7 +32,7 @@
       <uses-permission android:name="android.permission.VIBRATE"/>
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     </config-file>
-    <edit-config file="AndroidManifest.xml" mode="overwrite" target="/manifest/application">
+    <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application">
       <activity android:name="com.adobe.phonegap.push.PushHandlerActivity" android:exported="true" android:permission="${applicationId}.permission.PushHandlerActivity"/>
       <receiver android:name="com.adobe.phonegap.push.BackgroundActionButtonHandler"/>
       <receiver android:name="com.adobe.phonegap.push.PushDismissedHandler"/>
@@ -54,6 +54,12 @@
             <category android:name="android.intent.category.DEFAULT"></category>
         </intent-filter>
       </activity>      
+    </edit-config>
+    <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+        <activity android:resizeableActivity="false"/>
+    </edit-config>
+    <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+        <application android:allowBackup="false"/>
     </edit-config>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
