@@ -41,7 +41,7 @@
 <!--       <provider android:name="android.support.v4.content.FileProvider" android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true">
         <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
       </provider> -->
-      <activity android:name="com.adobe.phonegap.push.PushHandlerActivity" android:exported="true" android:permission="${applicationId}.permission.PushHandlerActivity"/>
+<!--       <activity android:name="com.adobe.phonegap.push.PushHandlerActivity" android:exported="true" android:permission="${applicationId}.permission.PushHandlerActivity"/>
       <receiver android:name="com.adobe.phonegap.push.BackgroundActionButtonHandler"/>
       <receiver android:name="com.adobe.phonegap.push.PushDismissedHandler"/>
       <service android:name="com.adobe.phonegap.push.FCMService">
@@ -53,7 +53,7 @@
         <intent-filter>
           <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
         </intent-filter>
-      </service>
+      </service> -->
 <!--       <service android:name="com.adobe.phonegap.push.ForegroundStarterService"></service> -->
 <!--       <activity android:name="com.adobe.phonegap.push.BlankActivity">
         <intent-filter>
