@@ -73,15 +73,7 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
   public void onMessageReceived(RemoteMessage message) {
 
     String from = message.getFrom();
-    Log.d(LOG_TAG, "onMessage - from: " + from);
-
-    Intent intent = new Intent(this, ForegroundStarterService.class);
-    intent.setAction("start");
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        startForegroundService(intent);
-    } else {
-        startService(intent);
-    }
+    Log.d(LOG_TAG, "onMessage - from: " + from);    
     
     Bundle extras = new Bundle();
 
@@ -120,6 +112,14 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
         }
       }
 
+      Intent intent = new Intent(this, ForegroundStarterService.class);
+      intent.setAction("start");
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          startForegroundService(intent);
+      } else {
+          startService(intent);
+      }
+      
       String bringToFront = message.getData().get(BRING_TO_FRONT);
       if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
         if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
