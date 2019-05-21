@@ -73,15 +73,7 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
   public void onMessageReceived(RemoteMessage message) {
 
     String from = message.getFrom();
-    Log.d(LOG_TAG, "onMessage - from: " + from);    
-    
-    Intent intent = new Intent(this, ForegroundStarterService.class);
-    intent.setAction("start");
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        startForegroundService(intent);
-    } else {
-        startService(intent);
-    }
+    Log.d(LOG_TAG, "onMessage - from: " + from);            
     
     Bundle extras = new Bundle();
 
@@ -115,9 +107,7 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
       String timestamp = message.getData().get(TIMESTAMP);
       if( timestamp != null ) {
         if( new IgnoreMessageStore(this).exists(timestamp)) {
-          Log.i(LOG_TAG, "Ignoring message with timestamp" + timestamp);
-          intent.setAction("stop");
-          startService(intent);
+          Log.i(LOG_TAG, "Ignoring message with timestamp" + timestamp);          
           return;
         }
       }      
