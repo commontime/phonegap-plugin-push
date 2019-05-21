@@ -483,12 +483,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
         public void run() {
           try {
             final String messageId = data.getString(0);
-            new IgnoreMessageStore(cordova.getActivity()).addMessage(messageId);
-            
-            Intent intent = new Intent(cordova.getActivity(), ForegroundStarterService.class);
-            intent.setAction("stop");
-            cordova.getActivity().startService(intent);         
-            
+            new IgnoreMessageStore(cordova.getActivity()).addMessage(messageId);         
             callbackContext.success();
           } catch(JSONException e) {
             callbackContext.error("Invalid messageId: " + e.getMessage());
