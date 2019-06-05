@@ -121,6 +121,8 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
 
     public boolean exists(String messageId) {
 
+        boolean exists = false;
+      
         final String[] COLUMNS = {KEY_ID};
 
         final SQLiteDatabase db = this.getReadableDatabase();
@@ -136,9 +138,11 @@ public class IgnoreMessageStore extends SQLiteOpenHelper {
                         null); // h. limit
 
         if( cursor != null ) {
-            return cursor.getCount() > 0;
+            exists = cursor.getCount() > 0;
         }
 
-        return false;
+        db.close();
+      
+        return exists;
     }
 }

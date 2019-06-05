@@ -73,8 +73,8 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
   public void onMessageReceived(RemoteMessage message) {
 
     String from = message.getFrom();
-    Log.d(LOG_TAG, "onMessage - from: " + from);
-
+    Log.d(LOG_TAG, "onMessage - from: " + from);            
+    
     Bundle extras = new Bundle();
 
     if (message.getNotification() != null) {
@@ -107,14 +107,15 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
       String timestamp = message.getData().get(TIMESTAMP);
       if( timestamp != null ) {
         if( new IgnoreMessageStore(this).exists(timestamp)) {
-          Log.i(LOG_TAG, "Ignoring message with timestamp" + timestamp);
+          Log.i(LOG_TAG, "Ignoring message with timestamp" + timestamp);          
           return;
         }
-      }
-
+      }      
+      
       String bringToFront = message.getData().get(BRING_TO_FRONT);
       if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
         if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
+          Log.i(LOG_TAG, "Calling switchOnScreenAndForeground");
           android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
           // Stash this push until resumed?
           PushPlugin.sendExtras(extras);

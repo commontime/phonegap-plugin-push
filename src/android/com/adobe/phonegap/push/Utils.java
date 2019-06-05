@@ -16,6 +16,8 @@ public class Utils {
         boolean screenOn = Utils.isScreenOn(ctx);
 
         if (!(screenOn && PushPlugin.isInForeground())) {
+            System.out.println("GJM BLANK: " + PushPlugin.broughtToFront);
+
             PushPlugin.broughtToFront = true;
             Intent i2 = new Intent("com.adobe.phonegap.push.BlankActivity");
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M || Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
@@ -437,11 +438,13 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
       });
     } else if (BRING_TO_FRONT.equals(action)) {
       if(!Utils.isScreenOn(cordova.getActivity())) {
+        System.out.println("GJM BRING_TO_FRONT: " + broughtToFront);
         broughtToFront = true;
       }
       Utils.switchOnScreenAndForeground(cordova.getActivity());
       callbackContext.success();
     } else if (CANCEL_AT_FRONT.equals(action)) {
+      System.out.println("GJM CANCEL_AT_FRONT: " + broughtToFront);
       if (broughtToFront) {
         broughtToFront = false;
         cordova.getActivity().runOnUiThread(() -> {
@@ -480,7 +483,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
         public void run() {
           try {
             final String messageId = data.getString(0);
-            new IgnoreMessageStore(cordova.getActivity()).addMessage(messageId);
+            new IgnoreMessageStore(cordova.getActivity()).addMessage(messageId);         
             callbackContext.success();
           } catch(JSONException e) {
             callbackContext.error("Invalid messageId: " + e.getMessage());
@@ -618,22 +621,43 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
     super.onResume(multitasking);
     gForeground = true;
 
-    Window window = cordova.getActivity().getWindow();
-    try {
-      cordova.getActivity().setShowWhenLocked(true);
-      window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-    } catch (NoSuchMethodError e) {
-      window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-    }
-    try {
-      cordova.getActivity().setTurnScreenOn(true);
-      window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-    } catch (NoSuchMethodError e) {
-      window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-    }
+    System.out.println("GJM Resuming: " + broughtToFront);
 
-    window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    if(broughtToFront) {
+      Window window = cordova.getActivity().getWindow();
+      try {
+        cordova.getActivity().setShowWhenLocked(true);
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+      } catch (NoSuchMethodError e) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+      }
+      try {
+        cordova.getActivity().setTurnScreenOn(true);
+        window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+      } catch (NoSuchMethodError e) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+      }
+
+      window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+      window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    } else {
+      Window window = cordova.getActivity().getWindow();
+      try {
+        cordova.getActivity().setShowWhenLocked(false);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+      } catch (NoSuchMethodError e) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+      }
+      try {
+        cordova.getActivity().setTurnScreenOn(false);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+      } catch (NoSuchMethodError e) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+      }
+
+      window.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+      window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
   }
 
   @Override
