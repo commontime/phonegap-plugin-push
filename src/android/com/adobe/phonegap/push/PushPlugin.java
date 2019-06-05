@@ -524,7 +524,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
             public void run() {
                 try {
                   final boolean suppress = data.getBoolean(0);                  
-                  SharedPreferences.Editor editor = context.getSharedPreferences(SUPPRESS_PROCESSING, Context.MODE_PRIVATE).edit();
+                  SharedPreferences.Editor editor = cordova.getActivity().getSharedPreferences(SUPPRESS_PROCESSING, Context.MODE_PRIVATE).edit();
                   editor.putBoolean(SUPPRESS_PROCESSING, suppress);
                   editor.apply();
                   callbackContext.success();
