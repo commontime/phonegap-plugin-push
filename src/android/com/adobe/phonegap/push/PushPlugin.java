@@ -529,7 +529,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
                   editor.apply();
                   callbackContext.success();
                 } catch(JSONException e) {
-                    callbackContext.error("Invalid messageId: " + e.getMessage());
+                    callbackContext.error("Invalid parameter " + e.getMessage());
                 }
             }
         });
