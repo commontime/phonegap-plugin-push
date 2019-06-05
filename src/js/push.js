@@ -358,6 +358,10 @@ module.exports = {
     exec(successCallback, errorCallback, 'PushNotification', 'checkIgnoreList', [messageId]);
   },
 
+  suppressProcessing: (successCallback, errorCallback, suppress) => {
+    exec(successCallback, errorCallback, 'PushNotification', 'suppressProcessing', [suppress]);
+  },
+
   /**
    * PushNotification Object.
    *

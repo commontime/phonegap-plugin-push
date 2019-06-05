@@ -382,12 +382,12 @@ module.exports = {
     exec(successCallback, errorCallback, 'PushNotification', 'listChannels', []);
   },
 
-  bringToFront: function bringToFront(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'PushNotification', 'bringToFront', []);
-  },
-
   cancelAtFront: function cancelAtFront(successCallback, errorCallback) {
     exec(successCallback, errorCallback, 'PushNotification', 'cancelAtFront', []);
+  },
+
+  bringToFront: function bringToFront(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, 'PushNotification', 'bringToFront', []);
   },
 
   addToIgnoreList: function addToIgnoreList(successCallback, errorCallback, messageId) {
@@ -400,6 +400,10 @@ module.exports = {
 
   checkIgnoreList: function checkIgnoreList(successCallback, errorCallback, messageId) {
     exec(successCallback, errorCallback, 'PushNotification', 'checkIgnoreList', [messageId]);
+  },
+
+  suppressProcessing: function suppressProcessing(successCallback, errorCallback, suppress) {
+    exec(successCallback, errorCallback, 'PushNotification', 'suppressProcessing', [suppress]);
   },
 
   /**

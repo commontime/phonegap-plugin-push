@@ -515,6 +515,21 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
                 }
             }
         });
+      } else if (SUPPRESS_PROCESSING.equals(action)) {
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                  final boolean suppress = data.getBoolean(0);                  
+                  SharedPreferences.Editor editor = context.getSharedPreferences(SUPPRESS_PROCESSING, Context.MODE_PRIVATE).edit();
+                  editor.putBoolean(SUPPRESS_PROCESSING, suppress);
+                  editor.apply();
+                  callbackContext.success();
+                } catch(JSONException e) {
+                    callbackContext.error("Invalid messageId: " + e.getMessage());
+                }
+            }
+        });
     } else {
       Log.e(LOG_TAG, "Invalid action : " + action);
       callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
