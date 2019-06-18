@@ -455,6 +455,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
             window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
             window.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+            cordova.getActivity().moveTaskToBack(true);
             callbackContext.success();
             return;
           }
