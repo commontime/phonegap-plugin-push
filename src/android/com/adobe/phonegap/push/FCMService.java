@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.support.v4.app.RemoteInput;
@@ -73,8 +74,8 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
   public void onMessageReceived(RemoteMessage message) {
 
     String from = message.getFrom();
-    Log.d(LOG_TAG, "onMessage - from: " + from);            
-    
+    Log.d(LOG_TAG, "onMessage - from: " + from);
+
     Context applicationContext = getApplicationContext();
     SharedPreferences suppressPrefs = applicationContext.getSharedPreferences(PushConstants.SUPPRESS_PROCESSING, Context.MODE_PRIVATE);
     boolean suppress = suppressPrefs.getBoolean(PushConstants.SUPPRESS_PROCESSING, false);
@@ -95,14 +96,14 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
       extras.putString(entry.getKey(), entry.getValue());
     }
 
-    if (extras != null && isAvailableSender(from)) {      
+    if (extras != null && isAvailableSender(from)) {
 
       SharedPreferences prefs = applicationContext.getSharedPreferences(PushPlugin.COM_ADOBE_PHONEGAP_PUSH,
               Context.MODE_PRIVATE);
       boolean forceShow = prefs.getBoolean(FORCE_SHOW, false);
       boolean clearBadge = prefs.getBoolean(CLEAR_BADGE, false);
       String messageKey = prefs.getString(MESSAGE_KEY, MESSAGE);
-      String titleKey = prefs.getString(TITLE_KEY, TITLE);      
+      String titleKey = prefs.getString(TITLE_KEY, TITLE);
 
       extras = normalizeExtras(applicationContext, extras, messageKey, titleKey);
 
@@ -113,19 +114,23 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
       String timestamp = message.getData().get(TIMESTAMP);
       if( timestamp != null ) {
         if( new IgnoreMessageStore(this).exists(timestamp)) {
-          Log.i(LOG_TAG, "Ignoring message with timestamp" + timestamp);          
+          Log.i(LOG_TAG, "Ignoring message with timestamp" + timestamp);
           return;
         }
-      }      
-      
+      }
+
       String bringToFront = message.getData().get(BRING_TO_FRONT);
       if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
         if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
-          Log.i(LOG_TAG, "Calling switchOnScreenAndForeground");
-          android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
-          // Stash this push until resumed?
-          PushPlugin.sendExtras(extras);
-          return;
+          if (Build.VERSION.SDK_INT >= 29 && !Settings.canDrawOverlays(applicationContext)) {
+            extras.putString(MESSAGE, "You have a new urgent notification");
+          } else {
+            Log.i(LOG_TAG, "Calling switchOnScreenAndForeground");
+            android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
+            // Stash this push until resumed?
+            PushPlugin.sendExtras(extras);
+            return;
+          }
         }
       }
 
@@ -374,6 +379,10 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
       }
 
       createNotification(context, extras);
+    }
+
+    if (Build.VERSION.SDK_INT >= 29 && !Settings.canDrawOverlays(context)) {
+      if (!PushPlugin.isActive()) return;
     }
 
     if (!PushPlugin.isActive() && "1".equals(forceStart)) {
