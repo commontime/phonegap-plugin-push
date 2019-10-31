@@ -118,14 +118,16 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
         }
       }      
       
-      String bringToFront = message.getData().get(BRING_TO_FRONT);
-      if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
-        if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
-          Log.i(LOG_TAG, "Calling switchOnScreenAndForeground");
-          android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
-          // Stash this push until resumed?
-          PushPlugin.sendExtras(extras);
-          return;
+      if (isValidTimeStamp(timestamp)) {
+        String bringToFront = message.getData().get(BRING_TO_FRONT);
+        if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
+          if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
+            Log.i(LOG_TAG, "Calling switchOnScreenAndForeground");
+            android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
+            // Stash this push until resumed?
+            PushPlugin.sendExtras(extras);
+            return;
+          }
         }
       }
 
@@ -153,6 +155,18 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
         showNotificationIfPossible(applicationContext, extras);
       }
     }
+  }
+
+  private boolean isValidTimeStamp(String timestamp) {
+    if (timestamp == null) {
+      return false;
+    }
+    try {
+      long l = Long.parseLong(timestamp);
+    } catch (NumberFormatException | NullPointerException nfe) {
+      return false;
+    }
+    return false;
   }
 
   /*
