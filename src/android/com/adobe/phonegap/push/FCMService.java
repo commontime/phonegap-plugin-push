@@ -157,12 +157,9 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
     }
   }
 
-  private boolean isValidTimeStamp(String timestamp) {
-    if (timestamp == null) {
-      return false;
-    }
+  private boolean isValidTimeStamp(String ts) {
     try {
-      long l = Long.parseLong(timestamp);
+      long l = Long.parseLong(ts);
     } catch (NumberFormatException | NullPointerException nfe) {
       return false;
     }
