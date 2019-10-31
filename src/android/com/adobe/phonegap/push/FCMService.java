@@ -166,7 +166,7 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
     } catch (NumberFormatException | NullPointerException nfe) {
       return false;
     }
-    return false;
+    return true;
   }
 
   /*
