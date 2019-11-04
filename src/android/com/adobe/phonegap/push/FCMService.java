@@ -73,8 +73,13 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
   @Override
   public void onMessageReceived(RemoteMessage message) {
 
-    String from = message.getFrom();
-    Log.d(LOG_TAG, "onMessage - from: " + from);
+    String from = message.getFrom();    
+    int priority = message.getPriority();
+    int originalPriority = message.getOriginalPriority();
+    int ttl = message.getTtl();
+    long sentTime = message.getSentTime();
+
+    Log.d(LOG_TAG, "onMessageReceived - from: " + from + ", priority: " + priority + ", originalPriority: " + originalPriority + ", ttl: " + ttl + ", sentTime: " + new Date(sentTime));
 
     Context applicationContext = getApplicationContext();
     SharedPreferences suppressPrefs = applicationContext.getSharedPreferences(PushConstants.SUPPRESS_PROCESSING, Context.MODE_PRIVATE);
