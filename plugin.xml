@@ -53,7 +53,16 @@
             <action android:name="com.adobe.phonegap.push.BlankActivity"></action>
             <category android:name="android.intent.category.DEFAULT"></category>
         </intent-filter>
-      </activity>      
+      </activity>
+      <receiver android:name="com.adobe.phonegap.push.NetworkChangeReceiver" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+      </receiver>  
+      <receiver android:name="com.adobe.phonegap.push.PushFixAlarmReceiver" android:enabled="true" android:process=":remote"/>    
     </config-file>
     <preference name="ANDROID_SUPPORT_V13_VERSION" default="27.+"/>
     <preference name="FCM_VERSION" default="17.0.+"/>
@@ -73,6 +82,9 @@
     <source-file src="src/android/com/adobe/phonegap/push/IgnoreMessageStore.java" target-dir="src/com/adobe/phonegap/push/"/>
     <source-file src="src/android/com/adobe/phonegap/push/Utils.java" target-dir="src/com/adobe/phonegap/push/"/>
     <source-file src="src/android/com/adobe/phonegap/push/ForegroundStarterService.java" target-dir="src/com/adobe/phonegap/push/"/>
+    <source-file src="src/android/com/adobe/phonegap/push/PushFixAlarmReceiver.java" target-dir="src/com/adobe/phonegap/push/"/>
+    <source-file src="src/android/com/adobe/phonegap/push/PushFixAlarmHandler.java" target-dir="src/com/adobe/phonegap/push/"/>
+    <source-file src="src/android/com/adobe/phonegap/push/NetworkChangeReceiver.java" target-dir="src/com/adobe/phonegap/push/"/>
   </platform>
   <platform name="browser">
     <js-module src="www/browser/push.js" name="BrowserPush">

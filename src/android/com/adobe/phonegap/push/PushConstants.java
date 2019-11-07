@@ -102,6 +102,8 @@ public interface PushConstants {
   public static final String ONGOING = "ongoing";
   public static final String LIST_CHANNELS = "listChannels";
   public static final String CLEAR_NOTIFICATION = "clearNotification";
+  public static final String PUSH_FIXER = "pushFixer";
+  public static final String PUSH_FIXER_DELAY = "pushFixerDelay";
 
   public static final String MessageId = "messageId";
 

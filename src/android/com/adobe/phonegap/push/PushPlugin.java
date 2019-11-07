@@ -603,6 +603,15 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
     gForeground = true;
+
+    if (preferences.getBoolean(PUSH_FIXER, false)) {
+      new PushFixAlarmHandler().setAlarm(getApplicationContext());
+
+      SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(PUSH_FIXER, Context.MODE_PRIVATE).edit();
+      editor.putInt(PUSH_FIXER_DELAY, preferences.getInteger(PUSH_FIXER, 5));
+      editor.apply();
+    }
+
   }
 
   @Override
