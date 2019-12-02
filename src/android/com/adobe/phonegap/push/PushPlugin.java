@@ -1,5 +1,6 @@
 package com.adobe.phonegap.push;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NotificationChannel;
@@ -8,14 +9,17 @@ import android.com.adobe.phonegap.push.Utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,6 +31,7 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.PermissionHelper;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +49,7 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 public class PushPlugin extends CordovaPlugin implements PushConstants {
 
   public static final String LOG_TAG = "Push_Plugin";
+  public static final int SMS_PERMISSION_REQUEST_CODE = 623726;
   public static boolean broughtToFront;
 
   private static CallbackContext pushContext;
@@ -478,6 +484,21 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
           callbackContext.success();
         });
       }
+    } else if (SET_SMS_KEY.equals(action)) {
+      cordova.getThreadPool().execute(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            final String key = data.getString(0);
+            SharedPreferences.Editor editor = cordova.getActivity().getSharedPreferences(SMS_KEY, Context.MODE_PRIVATE).edit();
+            editor.putString(SMS_KEY, key);
+            editor.apply();
+            callbackContext.success();
+          } catch(JSONException e) {
+            callbackContext.error("Invalid messageId: " + e.getMessage());
+          }
+        }
+      });
     } else if (ADD_TO_IGNORE.equals(action)) {
       cordova.getThreadPool().execute(new Runnable() {
         @Override
@@ -612,6 +633,15 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
       editor.apply();
     }
 
+    if (preferences.getBoolean(SMS_RECEIVER, false)) {
+      boolean smsPermission = PermissionHelper.hasPermission(this, Manifest.permission.RECEIVE_SMS);
+      if (!smsPermission) {
+        PermissionHelper.requestPermission(this, SMS_PERMISSION_REQUEST_CODE, Manifest.permission.CAMERA);
+      }
+      SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SMS_RECEIVER, Context.MODE_PRIVATE).edit();
+      editor.putBoolean(SMS_RECEIVER, preferences.getBoolean(SMS_RECEIVER, false));
+      editor.apply();
+    }
   }
 
   @Override

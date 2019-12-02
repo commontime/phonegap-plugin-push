@@ -105,6 +105,8 @@ public interface PushConstants {
   public static final String PUSH_FIXER = "pushFixer";
   public static final String PUSH_FIXER_DELAY = "pushFixerDelay";
 
+  public static final String SMS_RECEIVER = "smsReceiver";
+
   public static final String MessageId = "messageId";
 
   public static final String BRING_TO_FRONT = "bringToFront";
@@ -115,6 +117,9 @@ public interface PushConstants {
   public static final String ADD_TO_IGNORE = "addToIgnoreList";
   public static final String REMOVE_FROM_IGNORE = "removeFromIgnoreList";
   public static final String CHECK_IGNORE = "checkIgnoreList";
+
+  public static final String SET_SMS_KEY = "setSmsKey";
+  public static final String SMS_KEY = "smsKey";
 
   public static final String SUPPRESS_PROCESSING = "suppressProcessing";
 }
