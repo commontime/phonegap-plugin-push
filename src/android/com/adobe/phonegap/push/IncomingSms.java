@@ -64,7 +64,12 @@ public class IncomingSms extends BroadcastReceiver {
 
             SharedPreferences timeDiffPrefs = applicationContext.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
             String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
-            clockSkew = Long.parseLong(skewString);
+            try {
+                clockSkew = Long.parseLong(skewString);
+            } catch (NumberFormatException e) {
+                Log.e(LOG_TAG, "Clock Skew invalid");
+                clockSkew = 0;
+            }
 
             long receivedTime = new Date().getTime() + clockSkew;
 
