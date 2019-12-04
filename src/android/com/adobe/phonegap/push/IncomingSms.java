@@ -46,7 +46,7 @@ public class IncomingSms extends BroadcastReceiver {
     public static final String ARCHIVEID = "archiveid";
     public static final String EXPIRYTIMESTAMP = "expirytime";
     public static final String OTP = "otp";
-    private static final String SMS_REGEX = "(?:ICoM: New alert on )(?<"+ALERTDAY+">[0-9]{1,2}) (?<"+ALERTMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+ALERTHOUR+">[0-9]{1,2}):(?<"+ALERTMINUTE+">[0-9]{1,2}) expires (?<"+EXPIRYDAY+">[0-9]{1,2}) (?<"+EXPIRYMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+EXPIRYHOUR+">[0-9]{1,2}):(?<"+EXPIRYMINUTE+">[0-9]{1,2}) (?<"+ARCHIVEID+">[0-9]{9,15}) (?<"+OTP+">[0-9]{6}) (?<"+EXPIRYTIMESTAMP+">[0-9]{6})$";
+    private static final String SMS_REGEX = "(?:ICoM: New alert on )(?<"+ALERTDAY+">[0-9]{1,2}) (?<"+ALERTMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+ALERTHOUR+">[0-9]{1,2}):(?<"+ALERTMINUTE+">[0-9]{1,2}) expires (?<"+EXPIRYDAY+">[0-9]{1,2}) (?<"+EXPIRYMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+EXPIRYHOUR+">[0-9]{1,2}):(?<"+EXPIRYMINUTE+">[0-9]{1,2}) (?<"+ARCHIVEID+">[0-9]{9,15}) (?<"+OTP+">[0-9]{6}) (?<"+EXPIRYTIMESTAMP+">[0-9]{9,15})$";
     public static final int TIME_STEP = 30;     // Time step length (seconds)
     public static final int BEFORE_STEPS = -5;  //  Number of time steps before now accepted
     public static final int AFTER_STEPS = 20;  //  Number of time steps after now accepted
@@ -126,8 +126,8 @@ public class IncomingSms extends BroadcastReceiver {
                 return;
             }
         }
-        if (new Date().getTime() > (sms.expiryTime + 60 * 1000)) {
-            Log.i(LOG_TAG, "Ignoring sms that has expired: " + sms.expiryTime);
+        if (new Date().getTime() > sms.getExpiryTime()) {
+            Log.i(LOG_TAG, "Ignoring sms that has expired: " + sms.getExpiryTime());
             return;
         }
         if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(context)) {
