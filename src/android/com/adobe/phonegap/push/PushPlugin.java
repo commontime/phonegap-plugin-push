@@ -506,8 +506,8 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
         public void run() {
           try {
             String timeDiff = data.getString(0);
-            SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(TIME_DIFF, Context.MODE_PRIVATE).edit();
-            editor.putString(TIME_DIFF, timeDiff);
+            SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SET_TIME_DIFF, Context.MODE_PRIVATE).edit();
+            editor.putString(SET_TIME_DIFF, timeDiff);
             editor.apply();
           } catch(JSONException e) {
             callbackContext.error("Invalid JSON: " + e.getMessage());
