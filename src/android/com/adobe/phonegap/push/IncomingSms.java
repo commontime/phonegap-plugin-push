@@ -177,15 +177,11 @@ public class IncomingSms extends BroadcastReceiver {
                 final String alertday = matcher.group(ALERTDAY);
                 final String alertmonth = matcher.group(ALERTMONTH);
                 final String alerthour = matcher.group(ALERTHOUR);
-                final String alertminute = matcher.group(ALERTMINUTE);
-
-                final String expiryday = matcher.group(EXPIRYDAY);
-                final String expiryhour = matcher.group(EXPIRYHOUR);
-                final String expiryminute = matcher.group(EXPIRYMINUTE);
-                final String expirymonth = matcher.group(EXPIRYMONTH);
+                final String alertminute = matcher.group(ALERTMINUTE);                
 
                 archiveid = matcher.group(ARCHIVEID);
                 otp = matcher.group(OTP);
+                expiryTime = match.group(EXPIRYTIMESTAMP);
 
                 final TimeBasedOneTimePasswordGenerator totpg = new TimeBasedOneTimePasswordGenerator(TIME_STEP, TimeUnit.SECONDS);
 
@@ -223,17 +219,7 @@ public class IncomingSms extends BroadcastReceiver {
                 } catch (ParseException e) {
                     e.printStackTrace();
                     return false;
-                }
-
-                final String expStr = expiryhour + ":" + expiryminute + " " + expiryday + "-" + expirymonth + "-" + now.get(Calendar.YEAR);
-
-                try {
-                    final Date dt = sdf.parse(expStr);
-                    expiryTime = dt.getTime();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return false;
-                }
+                }                
 
             } catch (NoSuchAlgorithmException e) {
                 Log.i(LOG_TAG, "No algorithm found to generate TOTP");
