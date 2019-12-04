@@ -55,25 +55,26 @@ public class IncomingSms extends BroadcastReceiver {
     private long clockSkew = 0;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context ctx, Intent intent) {        
 
-        SharedPreferences receiverPrefs = context.getApplicationContext().getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
+        Context applicationContext = ctx.getApplicationContext();
+
+        SharedPreferences receiverPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
         if (receiverPrefs.getBoolean(PushConstants.SMS_RECEIVER, false)) {
 
-            SharedPreferences timeDiffPrefs = context.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
+            SharedPreferences timeDiffPrefs = applicationContext.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
             String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
             clockSkew = Long.parseLong(skewString);
 
             long receivedTime = new Date().getTime() + clockSkew;
 
-            Context applicationContext = context.getApplicationContext();
             SharedPreferences suppressPrefs = applicationContext.getSharedPreferences(PushConstants.SUPPRESS_PROCESSING, Context.MODE_PRIVATE);
             boolean suppress = suppressPrefs.getBoolean(PushConstants.SUPPRESS_PROCESSING, false);
             if(suppress) {
                 return;
             }        
         
-            SharedPreferences keyPrefs = context.getSharedPreferences(PushConstants.SMS_KEY, Context.MODE_PRIVATE);
+            SharedPreferences keyPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_KEY, Context.MODE_PRIVATE);
             String encryptedKey = keyPrefs.getString(PushConstants.SMS_KEY, null);
 
             if (encryptedKey == null) {
@@ -82,7 +83,7 @@ public class IncomingSms extends BroadcastReceiver {
             }
 
             try {
-                KeystoreCrypto store = KeystoreCryptoFactory.INSTANCE.get(context);
+                KeystoreCrypto store = KeystoreCryptoFactory.INSTANCE.get(applicationContext);
                 store.create_key_if_not_available(PushConstants.SMS_KEY);
                 smsKey = store.decrypt(PushConstants.SMS_KEY, encryptedKey);
             } catch (KeyStoreException e) {
@@ -113,7 +114,7 @@ public class IncomingSms extends BroadcastReceiver {
                     for(String key : allMsgs.keySet()) {
                         boolean parsed = allMsgs.get(key).parse();
                         if (parsed) {
-                            processSms(allMsgs.get(key), context.getApplicationContext());
+                            processSms(allMsgs.get(key), applicationContext);
                         }
                     }
                 }
