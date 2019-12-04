@@ -127,7 +127,7 @@ public class IncomingSms extends BroadcastReceiver {
             }
         }
         SharedPreferences timeDiffPrefs = context.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
-        String skewString = timeDiffPrefs.getString(SET_TIME_DIFF, "0");
+        String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
         long skew = Long.parseLong(skewString);
         long skewedNow = new Date().getTime() + skew;
         if (skewedNow > sms.getExpiryTime()) {
