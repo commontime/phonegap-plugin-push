@@ -410,6 +410,10 @@ module.exports = {
     exec(successCallback, errorCallback, 'PushNotification', 'setSmsKey', [key]);
   },
 
+  syncTime: function syncTime(successCallback, errorCallback, timeDiff) {
+    exec(successCallback, errorCallback, 'PushNotification', 'syncTime', [timeDiff]);
+  },
+
   /**
    * PushNotification Object.
    *

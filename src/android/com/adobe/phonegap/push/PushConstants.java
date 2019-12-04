@@ -121,5 +121,7 @@ public interface PushConstants {
   public static final String SET_SMS_KEY = "setSmsKey";
   public static final String SMS_KEY = "smsKey";
 
+  public static final String SET_TIME_DIFF = "syncTime";
+
   public static final String SUPPRESS_PROCESSING = "suppressProcessing";
 }

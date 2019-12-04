@@ -500,6 +500,17 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
           }          
         }
       });
+    } else if (SET_TIME_DIFF.equals(action)) {
+      cordova.getThreadPool().execute(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            String timeDiff = data.getString(0);
+          } catch(JSONException e) {
+            callbackContext.error("Invalid JSON: " + e.getMessage());
+          }          
+        }
+      });  
     } else if (ADD_TO_IGNORE.equals(action)) {
       cordova.getThreadPool().execute(new Runnable() {
         @Override
