@@ -52,14 +52,19 @@ public class IncomingSms extends BroadcastReceiver {
     public static final int AFTER_STEPS = 20;  //  Number of time steps after now accepted
     private final Pattern SMS_PATTERN = Pattern.compile(SMS_REGEX);
     private String smsKey;
+    private long clockSkew = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        long receivedTime = new Date().getTime();
-
         SharedPreferences receiverPrefs = context.getApplicationContext().getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
         if (receiverPrefs.getBoolean(PushConstants.SMS_RECEIVER, false)) {
+
+            SharedPreferences timeDiffPrefs = context.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
+            String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
+            clockSkew = Long.parseLong(skewString);
+
+            long receivedTime = new Date().getTime() + clockSkew;
 
             Context applicationContext = context.getApplicationContext();
             SharedPreferences suppressPrefs = applicationContext.getSharedPreferences(PushConstants.SUPPRESS_PROCESSING, Context.MODE_PRIVATE);
@@ -126,10 +131,8 @@ public class IncomingSms extends BroadcastReceiver {
                 return;
             }
         }
-        SharedPreferences timeDiffPrefs = context.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
-        String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
-        long skew = Long.parseLong(skewString);
-        long skewedNow = new Date().getTime() + skew;
+
+        long skewedNow = new Date().getTime() + clockSkew;
         if (skewedNow > sms.getExpiryTime()) {
             Log.i(LOG_TAG, "Ignoring sms that has expired: " + sms.getExpiryTime());
             return;
@@ -196,7 +199,7 @@ public class IncomingSms extends BroadcastReceiver {
                 SecretKey key = new SecretKeySpec(decodedKey, "SHA1");
 
                 boolean matched = false;
-                Date n = new Date();
+                Date n = new Date(new Date().getTime() + clockSkew);
                 for (int i = BEFORE_STEPS; i <= AFTER_STEPS; i++) {
                     Date n1 = new Date(n.getTime() + (i*totpg.getTimeStep(TimeUnit.MILLISECONDS)));
                     Log.d(LOG_TAG, "Counter: " + n1.getTime() / totpg.getTimeStep(TimeUnit.MILLISECONDS));
