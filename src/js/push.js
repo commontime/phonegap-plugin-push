@@ -362,6 +362,10 @@ module.exports = {
     exec(successCallback, errorCallback, 'PushNotification', 'suppressProcessing', [suppress]);
   },
 
+  storeSMSSecret: (successCallback, errorCallback, key) => {
+    exec(successCallback, errorCallback, 'PushNotification', 'setSmsKey', [key]);
+  },
+
   /**
    * PushNotification Object.
    *
