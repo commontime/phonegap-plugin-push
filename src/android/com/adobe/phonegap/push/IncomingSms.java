@@ -11,6 +11,8 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator;
+import com.mutualmobile.androidkeystore.android.crypto.KeystoreCrypto;
+import com.mutualmobile.androidkeystore.android.crypto.KeystoreCryptoFactory;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -181,7 +183,7 @@ public class IncomingSms extends BroadcastReceiver {
 
                 archiveid = matcher.group(ARCHIVEID);
                 otp = matcher.group(OTP);
-                expiryTime = match.group(EXPIRYTIMESTAMP);
+                expiryTime = matcher.group(EXPIRYTIMESTAMP);
 
                 final TimeBasedOneTimePasswordGenerator totpg = new TimeBasedOneTimePasswordGenerator(TIME_STEP, TimeUnit.SECONDS);
 
