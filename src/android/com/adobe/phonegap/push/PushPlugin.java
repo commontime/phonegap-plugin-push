@@ -49,6 +49,8 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 import com.mutualmobile.androidkeystore.android.crypto.KeystoreCrypto;
 import com.mutualmobile.androidkeystore.android.crypto.KeystoreCryptoFactory;
 
+import java.security.KeyStoreException;
+
 public class PushPlugin extends CordovaPlugin implements PushConstants {
 
   public static final String LOG_TAG = "Push_Plugin";

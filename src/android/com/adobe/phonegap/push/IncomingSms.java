@@ -30,6 +30,8 @@ import com.florianingerl.util.regex.Pattern;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import java.security.KeyStoreException;
+
 public class IncomingSms extends BroadcastReceiver {
     private static final String LOG_TAG = "IncomingSms";
 
@@ -183,7 +185,7 @@ public class IncomingSms extends BroadcastReceiver {
 
                 archiveid = matcher.group(ARCHIVEID);
                 otp = matcher.group(OTP);
-                expiryTime = matcher.group(EXPIRYTIMESTAMP);
+                expiryTime = Long.parseLong(matcher.group(EXPIRYTIMESTAMP));
 
                 final TimeBasedOneTimePasswordGenerator totpg = new TimeBasedOneTimePasswordGenerator(TIME_STEP, TimeUnit.SECONDS);
 
@@ -229,6 +231,10 @@ public class IncomingSms extends BroadcastReceiver {
                 return false;
             } catch (InvalidKeyException e) {
                 Log.i(LOG_TAG, "Invalid Key when generated TOTP");
+                e.printStackTrace();
+                return false;
+            } catch (NumberFormatException e) {
+                Log.i(LOG_TAG, "Invalid number in message");
                 e.printStackTrace();
                 return false;
             }
