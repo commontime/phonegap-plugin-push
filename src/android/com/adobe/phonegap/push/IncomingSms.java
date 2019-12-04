@@ -126,7 +126,11 @@ public class IncomingSms extends BroadcastReceiver {
                 return;
             }
         }
-        if (new Date().getTime() > sms.getExpiryTime()) {
+        SharedPreferences timeDiffPrefs = context.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
+        String skewString = timeDiffPrefs.getString(SET_TIME_DIFF, "0");
+        long skew = Long.parseLong(skewString);
+        long skewedNow = new Date().getTime() + skew;
+        if (skewedNow > sms.getExpiryTime()) {
             Log.i(LOG_TAG, "Ignoring sms that has expired: " + sms.getExpiryTime());
             return;
         }
@@ -139,7 +143,6 @@ public class IncomingSms extends BroadcastReceiver {
                 return;
             }
         }
-
     }
 
     private class SingleSMS {
