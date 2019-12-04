@@ -26,12 +26,12 @@
       </feature>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.INTERNET"/>
-      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-      <uses-permission android:name="android.permission.WAKE_LOCK"/>
-      <uses-permission android:name="android.permission.VIBRATE"/>
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.WAKE_LOCK" />
+      <uses-permission android:name="android.permission.VIBRATE" />
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-      <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+      <uses-permission android:name="android.permission.RECEIVE_SMS" />
       <uses-permission android:name="android.permission.READ_SMS" />
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
@@ -78,6 +78,7 @@
     <framework src="com.google.firebase:firebase-messaging:$FCM_VERSION"/>
     <framework src="com.eatthepath:java-otp:0.1.0"/>
     <framework src="com.github.florianingerl.util:regex:1.1.9"/>
+    <framework src="com.mutualmobile:androidkeystore:0.0.4"/>
     <dependency id="cordova-support-google-services" version="~1.2.0"/>
     <dependency id="phonegap-plugin-multidex" version="~1.0.0"/>
     <source-file src="src/android/com/adobe/phonegap/push/FCMService.java" target-dir="src/com/adobe/phonegap/push/"/>

@@ -489,14 +489,10 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
         @Override
         public void run() {
           try {
-            final String key = data.getString(0);
-            SharedPreferences.Editor editor = cordova.getActivity().getSharedPreferences(SMS_KEY, Context.MODE_PRIVATE).edit();
-            editor.putString(SMS_KEY, key);
-            editor.apply();
-            callbackContext.success();
+            saveSMSKey(data.getString(0), callbackContext);
           } catch(JSONException e) {
-            callbackContext.error("Invalid messageId: " + e.getMessage());
-          }
+            callbackContext.error("Invalid JSON: " + e.getMessage());
+          }          
         }
       });
     } else if (ADD_TO_IGNORE.equals(action)) {
@@ -562,6 +558,22 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
     }
 
     return true;
+  }
+
+  private void saveSMSKey( String key, CallbackContext callbackContext) {    
+    try {
+      KeystoreCrypto store = KeystoreCryptoFactory.INSTANCE.get(cordova.getContext());
+      store.create_key_if_not_available(SMS_KEY);
+      String encrypted = store.encrypt(SMS_KEY, key);
+      SharedPreferences.Editor editor = cordova.getActivity().getSharedPreferences(SMS_KEY, Context.MODE_PRIVATE).edit();
+      editor.putString(SMS_KEY, encrypted);
+      editor.apply();
+      callbackContext.success();  
+    } catch (KeyStoreException e) {
+      e.printStackTrace();
+      Log.e(LOG_TAG, "Key store exception while encrypting SMS Key");
+      return;
+    }
   }
 
   public static void sendEvent(JSONObject _json) {

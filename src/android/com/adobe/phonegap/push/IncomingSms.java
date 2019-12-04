@@ -35,13 +35,14 @@ public class IncomingSms extends BroadcastReceiver {
     public static final String ALERTMONTH = "alertmonth";
     public static final String ALERTHOUR = "alerthour";
     public static final String ALERTMINUTE = "alertminute";
-    public static final String EXPIRYDAY = "expiryday";
-    public static final String EXPIRYHOUR = "expiryhour";
-    public static final String EXPIRYMINUTE = "expiryminute";
-    public static final String EXPIRYMONTH = "expirymonth";
+    // public static final String EXPIRYDAY = "expiryday";
+    // public static final String EXPIRYHOUR = "expiryhour";
+    // public static final String EXPIRYMINUTE = "expiryminute";
+    // public static final String EXPIRYMONTH = "expirymonth";
     public static final String ARCHIVEID = "archiveid";
+    public static final String EXPIRYTIMESTAMP = "expirytime";
     public static final String OTP = "otp";
-    private static final String SMS_REGEX = "(?:ICoM: New alert on )(?<"+ALERTDAY+">[0-9]{1,2}) (?<"+ALERTMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+ALERTHOUR+">[0-9]{1,2}):(?<"+ALERTMINUTE+">[0-9]{1,2}) expires (?<"+EXPIRYDAY+">[0-9]{1,2}) (?<"+EXPIRYMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+EXPIRYHOUR+">[0-9]{1,2}):(?<"+EXPIRYMINUTE+">[0-9]{1,2}) (?<"+ARCHIVEID+">[0-9]{9,15}) (?<"+OTP+">[0-9]{6})$";
+    private static final String SMS_REGEX = "(?:ICoM: New alert on )(?<"+ALERTDAY+">[0-9]{1,2}) (?<"+ALERTMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+ALERTHOUR+">[0-9]{1,2}):(?<"+ALERTMINUTE+">[0-9]{1,2}) (?<"+ARCHIVEID+">[0-9]{9,15}) (?<"+OTP+">[0-9]{6}) (?<"+EXPIRYTIMESTAMP+">[0-9]{9,15})$";
     public static final int TIME_STEP = 30;     // Time step length (seconds)
     public static final int BEFORE_STEPS = -5;  //  Number of time steps before now accepted
     public static final int AFTER_STEPS = 20;  //  Number of time steps after now accepted
@@ -53,18 +54,33 @@ public class IncomingSms extends BroadcastReceiver {
 
         long receivedTime = new Date().getTime();
 
-        Context applicationContext = context.getApplicationContext();
-        SharedPreferences suppressPrefs = applicationContext.getSharedPreferences(PushConstants.SUPPRESS_PROCESSING, Context.MODE_PRIVATE);
-        boolean suppress = suppressPrefs.getBoolean(PushConstants.SUPPRESS_PROCESSING, false);
-        if(suppress) {
-            return;
-        }
+        SharedPreferences receiverPrefs = context.getApplicationContext().getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
+        if (receiverPrefs.getBoolean(PushConstants.SMS_RECEIVER, false)) {
 
-        SharedPreferences smsKeyPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_KEY, Context.MODE_PRIVATE);
-        smsKey = smsKeyPrefs.getString(PushConstants.SMS_KEY, "8KZ36+LVjbVIcZz5iO7p060ZUBpH");
+            Context applicationContext = context.getApplicationContext();
+            SharedPreferences suppressPrefs = applicationContext.getSharedPreferences(PushConstants.SUPPRESS_PROCESSING, Context.MODE_PRIVATE);
+            boolean suppress = suppressPrefs.getBoolean(PushConstants.SUPPRESS_PROCESSING, false);
+            if(suppress) {
+                return;
+            }        
+        
+            SharedPreferences keyPrefs = context.getSharedPreferences(PushConstants.SMS_KEY, Context.MODE_PRIVATE);
+            String encryptedKey = keyPrefs.getString(PushConstants.SMS_KEY, null);
 
-        SharedPreferences prefs = context.getApplicationContext().getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
-        if (prefs.getBoolean(PushConstants.SMS_RECEIVER, false)) {
+            if (encryptedKey == null) {
+                Log.e(LOG_TAG, "No SMS Key");
+                return;
+            }
+
+            try {
+                KeystoreCrypto store = KeystoreCryptoFactory.INSTANCE.get(context);
+                store.create_key_if_not_available(PushConstants.SMS_KEY);
+                smsKey = store.decrypt(PushConstants.SMS_KEY, encryptedKey);
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "Key store exception while decoding SMS Key");
+                return;
+            }
 
             if (intent.getExtras() != null && intent.getExtras().containsKey("pdus")) {
                 Object[] pdus = (Object[]) intent.getExtras().get("pdus");
