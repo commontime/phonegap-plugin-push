@@ -506,12 +506,15 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
         public void run() {
           try {
             String timeDiff = data.getString(0);
+            Long.parseLong(timeDiff);
             SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SET_TIME_DIFF, Context.MODE_PRIVATE).edit();
             editor.putString(SET_TIME_DIFF, timeDiff);
             editor.apply();
           } catch(JSONException e) {
             callbackContext.error("Invalid JSON: " + e.getMessage());
-          }          
+          } catch(NumberFormatException e1) {
+            callbackContext.error("Invalid Time sync value: " + e1.getMessage());
+          }
         }
       });  
     } else if (ADD_TO_IGNORE.equals(action)) {
