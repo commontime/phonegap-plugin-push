@@ -510,6 +510,8 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
             SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SET_TIME_DIFF, Context.MODE_PRIVATE).edit();
             editor.putString(SET_TIME_DIFF, timeDiff);
             editor.apply();
+            Log.i(LOG_TAG, "Saved Time sync to push plugin (" + timeDiff + ")");
+            callbackContext.success();
           } catch(JSONException e) {
             callbackContext.error("Invalid JSON: " + e.getMessage());
           } catch(NumberFormatException e1) {
@@ -590,6 +592,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
       SharedPreferences.Editor editor = cordova.getActivity().getSharedPreferences(SMS_KEY, Context.MODE_PRIVATE).edit();
       editor.putString(SMS_KEY, encrypted);
       editor.apply();
+      Log.i(LOG_TAG, "Saved SMS key.");
       callbackContext.success();  
     } catch (KeyStoreException e) {
       e.printStackTrace();
