@@ -47,12 +47,12 @@ public class IncomingSms extends BroadcastReceiver {
     public static final String EXPIRYTIMESTAMP = "expirytime";
     public static final String OTP = "otp";
     private static final String SMS_REGEX = "(?:ICoM: New alert on )(?<"+ALERTDAY+">[0-9]{1,2}) (?<"+ALERTMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+ALERTHOUR+">[0-9]{1,2}):(?<"+ALERTMINUTE+">[0-9]{1,2}) expires (?<"+EXPIRYDAY+">[0-9]{1,2}) (?<"+EXPIRYMONTH+">Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) at (?<"+EXPIRYHOUR+">[0-9]{1,2}):(?<"+EXPIRYMINUTE+">[0-9]{1,2}) (?<"+ARCHIVEID+">[0-9]{9,15}) (?<"+EXPIRYTIMESTAMP+">[0-9]{9,15}) (?<"+OTP+">[0-9]{6})$";
-    public static final int TIME_STEP = 30;     // Time step length (seconds)
-    public static final int BEFORE_STEPS = -5;  //  Number of time steps before now accepted
-    public static final int AFTER_STEPS = 20;  //  Number of time steps after now accepted
     private final Pattern SMS_PATTERN = Pattern.compile(SMS_REGEX);
     private String smsKey;
     private long clockSkew = 0;
+    private int totpTimeStep = 30;
+    private int totpBeforeSteps = -5;
+    private int totpAfterSteps = 20;
 
     @Override
     public void onReceive(Context ctx, Intent intent) {        
@@ -61,6 +61,10 @@ public class IncomingSms extends BroadcastReceiver {
 
         SharedPreferences receiverPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
         if (receiverPrefs.getBoolean(PushConstants.SMS_RECEIVER, false)) {
+
+            totpTimeStep = receiverPrefs.getInt(PushConstants.SMS_TOTP_TIME_STEP, 30);
+            totpBeforeSteps = -receiverPrefs.getInt(PushConstants.SMS_TOTP_BEFORE_STEPS, 5);
+            totpAfterSteps = receiverPrefs.getInt(PushConstants.SMS_TOTP_AFTER_STEPS, 20);
 
             SharedPreferences timeDiffPrefs = applicationContext.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
             String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
@@ -199,14 +203,14 @@ public class IncomingSms extends BroadcastReceiver {
                 otp = matcher.group(OTP);
                 expiryTime = Long.parseLong(matcher.group(EXPIRYTIMESTAMP));
 
-                final TimeBasedOneTimePasswordGenerator totpg = new TimeBasedOneTimePasswordGenerator(TIME_STEP, TimeUnit.SECONDS);
+                final TimeBasedOneTimePasswordGenerator totpg = new TimeBasedOneTimePasswordGenerator(totpTimeStep, TimeUnit.SECONDS);
 
                 byte[] decodedKey = Base64.decode(smsKey, 0);
                 SecretKey key = new SecretKeySpec(decodedKey, "SHA1");
 
                 boolean matched = false;
                 Date n = new Date(new Date().getTime() + clockSkew);
-                for (int i = BEFORE_STEPS; i <= AFTER_STEPS; i++) {
+                for (int i = totpBeforeSteps; i <= totpAfterSteps; i++) {
                     Date n1 = new Date(n.getTime() + (i*totpg.getTimeStep(TimeUnit.MILLISECONDS)));
                     Log.d(LOG_TAG, "Counter: " + n1.getTime() / totpg.getTimeStep(TimeUnit.MILLISECONDS));
                     int generatedTotp1 = totpg.generateOneTimePassword(key, n1);

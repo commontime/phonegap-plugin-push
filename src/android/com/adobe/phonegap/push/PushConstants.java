@@ -106,6 +106,9 @@ public interface PushConstants {
   public static final String PUSH_FIXER_DELAY = "pushFixerDelay";
 
   public static final String SMS_RECEIVER = "smsReceiver";
+  public static final String SMS_TOTP_TIME_STEP = "smsTotpTimeStep";
+  public static final String SMS_TOTP_BEFORE_STEPS = "smsTotpBeforeSteps";
+  public static final String SMS_TOTP_AFTER_STEPS = "smsTotpAfterSteps";  
 
   public static final String MessageId = "messageId";
 
