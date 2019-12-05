@@ -57,10 +57,14 @@ public class IncomingSms extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctx, Intent intent) {        
 
+        Log.i(LOG_TAG, "SMS Received");
+
         Context applicationContext = ctx.getApplicationContext();
 
         SharedPreferences receiverPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
         if (receiverPrefs.getBoolean(PushConstants.SMS_RECEIVER, false)) {
+
+            Log.i(LOG_TAG, "SMS Receiver is enabled");
 
             totpTimeStep = receiverPrefs.getInt(PushConstants.SMS_TOTP_TIME_STEP, 30);
             totpBeforeSteps = -receiverPrefs.getInt(PushConstants.SMS_TOTP_BEFORE_STEPS, 5);
@@ -75,13 +79,20 @@ public class IncomingSms extends BroadcastReceiver {
                 clockSkew = 0;
             }
 
+            Log.i(LOG_TAG, "Using TOTP Params: " + totpTimeStep + "/" + totpBeforeSteps + "/" + totpAfterSteps);
+            Log.i(LOG_TAG, "Using Clock skew: " + clockSkew);
+
             long receivedTime = new Date().getTime() + clockSkew;
+
+            Log.i(LOG_TAG, "Offset SMS Received time: " + new Date(receivedTime));
 
             SharedPreferences suppressPrefs = applicationContext.getSharedPreferences(PushConstants.SUPPRESS_PROCESSING, Context.MODE_PRIVATE);
             boolean suppress = suppressPrefs.getBoolean(PushConstants.SUPPRESS_PROCESSING, false);
             if(suppress) {
                 return;
             }        
+
+            Log.i(LOG_TAG, "Processing not suppressed");
         
             SharedPreferences keyPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_KEY, Context.MODE_PRIVATE);
             String encryptedKey = keyPrefs.getString(PushConstants.SMS_KEY, null);
@@ -100,6 +111,10 @@ public class IncomingSms extends BroadcastReceiver {
                 Log.e(LOG_TAG, "Key store exception while decoding SMS Key");
                 return;
             }
+
+            Log.i(LOG_TAG, "SMS Key acquired");
+
+            Log.i(LOG_TAG, "PDU Processing begins");
 
             if (intent.getExtras() != null && intent.getExtras().containsKey("pdus")) {
                 Object[] pdus = (Object[]) intent.getExtras().get("pdus");
@@ -121,8 +136,11 @@ public class IncomingSms extends BroadcastReceiver {
                     }
 
                     for(String key : allMsgs.keySet()) {
+                        Log.i(LOG_TAG, "Parsing Message");
                         boolean parsed = allMsgs.get(key).parse();
+                        Log.i(LOG_TAG, "Parsed Message: " + parsed);
                         if (parsed) {
+                            Log.i(LOG_TAG, "Processing Message");
                             processSms(allMsgs.get(key), applicationContext);
                         }
                     }
@@ -140,13 +158,16 @@ public class IncomingSms extends BroadcastReceiver {
                 Log.i(LOG_TAG, "Ignoring sms with archiveId: " + timestamp);
                 return;
             }
-        }
+        }        
 
         long skewedNow = new Date().getTime() + clockSkew;
         if (skewedNow > sms.getExpiryTime()) {
             Log.i(LOG_TAG, "Ignoring sms that has expired: " + sms.getExpiryTime());
             return;
         }
+
+        Log.i(LOG_TAG, "Message is valid.");
+
         if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(context)) {
             if (Build.VERSION.SDK_INT >= 29 && !Settings.canDrawOverlays(context)) {
                 // Maybe show a notification here?
