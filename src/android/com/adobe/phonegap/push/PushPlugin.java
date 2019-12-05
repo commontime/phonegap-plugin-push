@@ -677,9 +677,9 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
       }
       SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SMS_RECEIVER, Context.MODE_PRIVATE).edit();
       editor.putBoolean(SMS_RECEIVER, preferences.getBoolean(SMS_RECEIVER, false));
-      editor.putInt(SMS_TOTP_TIME_STEP, preferences.getInt(SMS_TOTP_TIME_STEP, 30));
-      editor.putInt(SMS_TOTP_BEFORE_STEPS, preferences.getInt(SMS_TOTP_BEFORE_STEPS, 5));
-      editor.putInt(SMS_TOTP_AFTER_STEPS, preferences.getInt(SMS_TOTP_AFTER_STEPS, 20));
+      editor.putInt(SMS_TOTP_TIME_STEP, preferences.getInteger(SMS_TOTP_TIME_STEP, 30));
+      editor.putInt(SMS_TOTP_BEFORE_STEPS, preferences.getInteger(SMS_TOTP_BEFORE_STEPS, 5));
+      editor.putInt(SMS_TOTP_AFTER_STEPS, preferences.getInteger(SMS_TOTP_AFTER_STEPS, 20));
       editor.apply();
     }
   }

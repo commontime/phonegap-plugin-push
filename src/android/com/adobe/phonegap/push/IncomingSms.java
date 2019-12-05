@@ -62,9 +62,9 @@ public class IncomingSms extends BroadcastReceiver {
         SharedPreferences receiverPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_RECEIVER, Context.MODE_PRIVATE);
         if (receiverPrefs.getBoolean(PushConstants.SMS_RECEIVER, false)) {
 
-            totpTimeStep = receiverPrefs.getInteger(PushConstants.SMS_TOTP_TIME_STEP, 30);
-            totpBeforeSteps = -receiverPrefs.getInteger(PushConstants.SMS_TOTP_BEFORE_STEPS, 5);
-            totpAfterSteps = receiverPrefs.getInteger(PushConstants.SMS_TOTP_AFTER_STEPS, 20);
+            totpTimeStep = receiverPrefs.getInt(PushConstants.SMS_TOTP_TIME_STEP, 30);
+            totpBeforeSteps = -receiverPrefs.getInt(PushConstants.SMS_TOTP_BEFORE_STEPS, 5);
+            totpAfterSteps = receiverPrefs.getInt(PushConstants.SMS_TOTP_AFTER_STEPS, 20);
 
             SharedPreferences timeDiffPrefs = applicationContext.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
             String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
