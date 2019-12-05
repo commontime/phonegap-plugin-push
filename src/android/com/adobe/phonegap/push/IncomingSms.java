@@ -50,12 +50,15 @@ public class IncomingSms extends BroadcastReceiver {
     private final Pattern SMS_PATTERN = Pattern.compile(SMS_REGEX);
     private String smsKey;
     private long clockSkew = 0;
+
     private int totpTimeStep = 30;
-    private int totpBeforeSteps = -5;
-    private int totpAfterSteps = 20;
+    // private int totpBeforeSteps = -5;
+    // private int totpAfterSteps = 20;
+
+    private int totpWindowSeconds = 4*60;
 
     @Override
-    public void onReceive(Context ctx, Intent intent) {        
+    public void onReceive(Context ctx, Intent intent) {
 
         Log.i(LOG_TAG, "SMS Received");
 
@@ -67,8 +70,8 @@ public class IncomingSms extends BroadcastReceiver {
             Log.i(LOG_TAG, "SMS Receiver is enabled");
 
             totpTimeStep = receiverPrefs.getInt(PushConstants.SMS_TOTP_TIME_STEP, 30);
-            totpBeforeSteps = -receiverPrefs.getInt(PushConstants.SMS_TOTP_BEFORE_STEPS, 5);
-            totpAfterSteps = receiverPrefs.getInt(PushConstants.SMS_TOTP_AFTER_STEPS, 20);
+            // totpBeforeSteps = -receiverPrefs.getInt(PushConstants.SMS_TOTP_BEFORE_STEPS, 5);
+            // totpAfterSteps = receiverPrefs.getInt(PushConstants.SMS_TOTP_AFTER_STEPS, 20);
 
             SharedPreferences timeDiffPrefs = applicationContext.getSharedPreferences(PushConstants.SET_TIME_DIFF, Context.MODE_PRIVATE);
             String skewString = timeDiffPrefs.getString(PushConstants.SET_TIME_DIFF, "0");
@@ -79,7 +82,6 @@ public class IncomingSms extends BroadcastReceiver {
                 clockSkew = 0;
             }
 
-            Log.i(LOG_TAG, "Using TOTP Params: " + totpTimeStep + "/" + totpBeforeSteps + "/" + totpAfterSteps);
             Log.i(LOG_TAG, "Using Clock skew: " + clockSkew);
 
             long receivedTime = new Date().getTime() + clockSkew;
@@ -90,10 +92,10 @@ public class IncomingSms extends BroadcastReceiver {
             boolean suppress = suppressPrefs.getBoolean(PushConstants.SUPPRESS_PROCESSING, false);
             if(suppress) {
                 return;
-            }        
+            }
 
             Log.i(LOG_TAG, "Processing not suppressed");
-        
+
             SharedPreferences keyPrefs = applicationContext.getSharedPreferences(PushConstants.SMS_KEY, Context.MODE_PRIVATE);
             String encryptedKey = keyPrefs.getString(PushConstants.SMS_KEY, null);
 
@@ -158,7 +160,7 @@ public class IncomingSms extends BroadcastReceiver {
                 Log.i(LOG_TAG, "Ignoring sms with archiveId: " + timestamp);
                 return;
             }
-        }        
+        }
 
         long skewedNow = new Date().getTime() + clockSkew;
         if (skewedNow > sms.getExpiryTime()) {
@@ -218,7 +220,7 @@ public class IncomingSms extends BroadcastReceiver {
                 final String alertday = matcher.group(ALERTDAY);
                 final String alertmonth = matcher.group(ALERTMONTH);
                 final String alerthour = matcher.group(ALERTHOUR);
-                final String alertminute = matcher.group(ALERTMINUTE);                
+                final String alertminute = matcher.group(ALERTMINUTE);
 
                 archiveid = matcher.group(ARCHIVEID);
                 otp = matcher.group(OTP);
@@ -231,7 +233,17 @@ public class IncomingSms extends BroadcastReceiver {
 
                 boolean matched = false;
                 Date n = new Date(new Date().getTime() + clockSkew);
-                for (int i = totpBeforeSteps; i <= totpAfterSteps; i++) {
+
+                long startTs = Long.parseLong(archiveid) - (totpWindowSeconds*1000);
+                long endTs = (n.getTime() > expiryTime ? expiryTime : n.getTime()) + (totpWindowSeconds*1000);
+
+                long totpBeforeSteps = -((n.getTime() - startTs) / totpg.getTimeStep(TimeUnit.MILLISECONDS));
+                long totpAfterSteps = (endTs - n.getTime()) / totpg.getTimeStep(TimeUnit.MILLISECONDS);
+
+                Log.i(LOG_TAG, "Using TOTP Params: " + totpTimeStep + "/" + totpBeforeSteps + "/" + totpAfterSteps);
+
+                int maxStepCheck = 100;
+                for (long i = totpBeforeSteps; i <= totpAfterSteps; i++) {
                     Date n1 = new Date(n.getTime() + (i*totpg.getTimeStep(TimeUnit.MILLISECONDS)));
                     Log.d(LOG_TAG, "Counter: " + n1.getTime() / totpg.getTimeStep(TimeUnit.MILLISECONDS));
                     int generatedTotp1 = totpg.generateOneTimePassword(key, n1);
@@ -241,6 +253,8 @@ public class IncomingSms extends BroadcastReceiver {
                         matched = true;
                         break;
                     }
+                    if (maxStepCheck-- <= 0)
+                        break;
                 }
 
                 if (!matched) {
@@ -260,7 +274,7 @@ public class IncomingSms extends BroadcastReceiver {
                 } catch (ParseException e) {
                     e.printStackTrace();
                     return false;
-                }                
+                }
 
             } catch (NoSuchAlgorithmException e) {
                 Log.i(LOG_TAG, "No algorithm found to generate TOTP");
