@@ -673,7 +673,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
     if (preferences.getBoolean(SMS_RECEIVER, false)) {
       boolean smsPermission = PermissionHelper.hasPermission(this, Manifest.permission.RECEIVE_SMS);
       if (!smsPermission) {
-        PermissionHelper.requestPermission(this, SMS_PERMISSION_REQUEST_CODE, Manifest.permission.CAMERA);
+        PermissionHelper.requestPermission(this, SMS_PERMISSION_REQUEST_CODE, Manifest.permission.RECEIVE_SMS);
       }
       SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SMS_RECEIVER, Context.MODE_PRIVATE).edit();
       editor.putBoolean(SMS_RECEIVER, preferences.getBoolean(SMS_RECEIVER, false));
