@@ -128,10 +128,10 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
 
       String bringToFront = message.getData().get(BRING_TO_FRONT);
       if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
+        forceShow = true;
+        extras.putString(MESSAGE, "You have a new urgent notification");
         if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
-          if (Build.VERSION.SDK_INT >= 29 && !Settings.canDrawOverlays(applicationContext)) {
-            extras.putString(MESSAGE, "You have a new urgent notification");
-          } else {
+          if (Build.VERSION.SDK_INT < 29 || (Build.VERSION.SDK_INT >= 29 && Settings.canDrawOverlays(applicationContext))) {
             Log.i(LOG_TAG, "Calling switchOnScreenAndForeground");
             android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
             // Stash this push until resumed?
