@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
@@ -75,7 +76,7 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
   @Override
   public void onMessageReceived(RemoteMessage message) {
 
-    String from = message.getFrom();    
+    String from = message.getFrom();
     int priority = message.getPriority();
     int originalPriority = message.getOriginalPriority();
     int ttl = message.getTtl();
@@ -136,6 +137,19 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
             android.com.adobe.phonegap.push.Utils.switchOnScreenAndForeground(this);
             // Stash this push until resumed?
             PushPlugin.sendExtras(extras);
+
+            if (!extras.containsKey(MESSAGE)) {
+              extras.putString(MESSAGE, "You have a new urgent notification");
+            }
+
+            Bundle finalExtras = extras;
+            new Thread(new Runnable() {
+              @Override
+              public void run() {
+                SystemClock.sleep(5000);
+                showNotificationIfPossible(applicationContext, finalExtras);
+              }
+            }).start();
             return;
           }
         }
