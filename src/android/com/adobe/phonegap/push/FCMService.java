@@ -127,6 +127,15 @@ public class FCMService extends FirebaseMessagingService implements PushConstant
         }
       }
 
+      String expiryTTL = message.getData().get(EXPIRY_TTL);
+      if( expiryTTL != null ) {
+        long expiredTimestamp = Long.valueOf(timestamp) + (Long.valueOf(expiryTTL) * 1000);
+        if (expiredTimestamp < new Date().getTime()) {
+          Log.i(LOG_TAG, "Ignoring expired message with timestamp" + timestamp);
+          return;
+        }
+      }
+
       String bringToFront = message.getData().get(BRING_TO_FRONT);
       if (bringToFront != null && bringToFront.equalsIgnoreCase("true")) {
         if (!PushPlugin.isInForeground() || !android.com.adobe.phonegap.push.Utils.isScreenOn(this)) {
