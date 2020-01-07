@@ -34,6 +34,7 @@ import java.security.KeyStoreException;
 
 public class IncomingSms extends BroadcastReceiver {
     private static final String LOG_TAG = "IncomingSms";
+    private static final String LOG_TAG2 = "SecretIncomingSMS";
 
     public static final String ALERTDAY = "alertday";
     public static final String ALERTMONTH = "alertmonth";
@@ -212,6 +213,8 @@ public class IncomingSms extends BroadcastReceiver {
 
         private boolean parse() {
 
+            Log.i(LOG_TAG2, "SMS: " + getData());
+
             Matcher matcher = SMS_PATTERN.matcher(getData());
             if (!matcher.find()) {
                 return false;
@@ -231,11 +234,16 @@ public class IncomingSms extends BroadcastReceiver {
                 byte[] decodedKey = Base64.decode(smsKey, 0);
                 SecretKey key = new SecretKeySpec(decodedKey, "SHA1");
 
+                Log.i(LOG_TAG2, "SMS Key: " + decodedKey);
+
                 boolean matched = false;
                 Date n = new Date(new Date().getTime() + clockSkew);
 
                 long startTs = Long.parseLong(archiveid) - (totpWindowSeconds*1000);
                 long endTs = (n.getTime() > expiryTime ? expiryTime : n.getTime()) + (totpWindowSeconds*1000);
+
+                Log.i(LOG_TAG, "startTs: " + startTs + ": " + new Date(startTs));
+                Log.i(LOG_TAG, "endTs: " + endTs + ": " + new Date(endTs));
 
                 long totpBeforeSteps = -((n.getTime() - startTs) / totpg.getTimeStep(TimeUnit.MILLISECONDS));
                 long totpAfterSteps = (endTs - n.getTime()) / totpg.getTimeStep(TimeUnit.MILLISECONDS);
