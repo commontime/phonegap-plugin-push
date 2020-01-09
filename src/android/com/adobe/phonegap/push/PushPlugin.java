@@ -55,6 +55,7 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
 
   public static final String LOG_TAG = "Push_Plugin";
   public static final int SMS_PERMISSION_REQUEST_CODE = 623726;
+  public static final String SMS_RECEIVER_DENIED = "smsDenied";
   public static boolean broughtToFront;
 
   private static CallbackContext pushContext;
@@ -671,10 +672,6 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
     }
 
     if (preferences.getBoolean(SMS_RECEIVER, false)) {
-      boolean smsPermission = PermissionHelper.hasPermission(this, Manifest.permission.RECEIVE_SMS);
-      if (!smsPermission) {
-        PermissionHelper.requestPermission(this, SMS_PERMISSION_REQUEST_CODE, Manifest.permission.RECEIVE_SMS);
-      }
       SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SMS_RECEIVER, Context.MODE_PRIVATE).edit();
       editor.putBoolean(SMS_RECEIVER, preferences.getBoolean(SMS_RECEIVER, false));
       editor.putInt(SMS_TOTP_TIME_STEP, preferences.getInteger(SMS_TOTP_TIME_STEP, 30));
@@ -697,11 +694,33 @@ public class PushPlugin extends CordovaPlugin implements PushConstants {
   }
 
   @Override
+  public void onRequestPermissionResult(int requestCode, String[] permissions,
+                                        int[] grantResults) throws JSONException {
+    if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
+      if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+        SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(SMS_RECEIVER, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(SMS_RECEIVER_DENIED, true);
+        editor.apply();
+      }
+    }
+  }
+
+  @Override
   public void onResume(boolean multitasking) {
     super.onResume(multitasking);
     gForeground = true;
 
     System.out.println("GJM Resuming: " + broughtToFront);
+
+    final SharedPreferences smsPrefs = getApplicationContext().getSharedPreferences(SMS_RECEIVER, Context.MODE_PRIVATE);
+    if (!smsPrefs.getBoolean(SMS_RECEIVER_DENIED, false)) {
+      if (preferences.getBoolean(SMS_RECEIVER, false)) {
+        boolean smsPermission = PermissionHelper.hasPermission(this, Manifest.permission.RECEIVE_SMS);
+        if (!smsPermission) {
+          PermissionHelper.requestPermission(this, SMS_PERMISSION_REQUEST_CODE, Manifest.permission.RECEIVE_SMS);
+        }
+      }
+    }
 
     if(broughtToFront) {
       Window window = cordova.getActivity().getWindow();
